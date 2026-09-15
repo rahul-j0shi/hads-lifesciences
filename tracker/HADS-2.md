@@ -45,7 +45,29 @@ Not yet done: no test suite, no `scripts/verify.py`, no CI workflow, no `uv.lock
 
 Hosting state: Vercel project `hads-lifesciences` created on the Hobby plan with no payment method attached. Production environment variables `APP_ENV`, `MONGODB_DATABASE`, `LOG_LEVEL` and `MONGODB_URI` are set. Vercel reports `framework: services`, confirming it accepted the two-service `vercel.json`.
 
-Live URLs/revisions: none yet. Do not mark done until hosted acceptance is verified; if deployment prerequisites are unavailable, record completed local work and the remaining blocker separately.
+### Deployment state, 2026-09-15
+
+**Live URL: `https://hads-lifesciences.vercel.app`** (Vercel project `hads-lifesciences`, team `hads4`, Hobby plan, no payment method attached).
+
+GitHub is connected and **automatic deployment on push is working end to end**: commit `9002fa0` built from `src=git` without any upload from the development machine, which was the whole point of connecting it.
+
+Verified against the first deployment (`9e1c426`):
+
+| Check | Result |
+| --- | --- |
+| `GET /` | 200 `text/html`, with `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options` and `Referrer-Policy` from `vercel.json` |
+| `GET /does-not-exist` | 404, so the absence of an SPA catch-all behaves as designed |
+| `/health/*` and `/api/*` routing | **Correct.** Both reached the Python service rather than falling through to the HTML page, which confirms the `/health/(.*)` rewrite above the catch-all |
+| Two-service build | Vite build plus Python 3.12 from `backend/.python-version`, uv 0.10.11, dependencies installed from `pyproject.toml` |
+| API responses | **500 `FUNCTION_INVOCATION_FAILED`.** Settings validation raised at import, which crashed the module and took liveness down with it |
+
+The crash is fixed in `9002fa0`, verified locally with no environment at all: liveness 200, welcome 200, readiness 503 in `problem+json`.
+
+**Not verified:** the endpoint behavior of the deployed `9002fa0`. The development machine lost network connectivity before it could be checked, so the fix is confirmed locally and the build is reported `READY`, but the live responses after the fix have not been observed. Re-run the section 10 checks in the [runbook](../documentation/setup-and-hosting.md) when connectivity returns.
+
+**Still outstanding:** Atlas Network Access must allow `0.0.0.0/0` before deployed readiness can return 200, because Vercel Hobby publishes no stable outbound IP ranges.
+
+Live URLs/revisions: `https://hads-lifesciences.vercel.app`, deployment `9002fa0`. Do not mark done until hosted acceptance is verified; if deployment prerequisites are unavailable, record completed local work and the remaining blocker separately.
 
 ## Contract readiness before implementation
 
