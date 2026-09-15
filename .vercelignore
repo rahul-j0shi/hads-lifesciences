@@ -9,18 +9,18 @@ __pycache__/
 *.py[cod]
 
 # Build output. Vercel produces this during the build.
-frontend/dist/
+/frontend/dist/
 **/tsconfig.tsbuildinfo
 
 # Client material. Kept out of the repository and out of the platform alike:
 # unreleased artwork, the content brief and the design specification.
-idea/
+/idea/
 
 # Local state, caches and reports.
-.git/
-.vercel/
-backend/reports/
-backend/tests/
+/.git/
+/.vercel/
+/backend/reports/
+/backend/tests/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -32,10 +32,14 @@ htmlcov/
 .env.*
 !.env.example
 
-# Documentation is not needed at runtime.
-documentation/
-rules/
-tracker/
-api-design/
-database-design/
-infrastructure/
+# Documentation is not needed at runtime. Every pattern here is anchored with a
+# leading slash so it matches only the repository-root directory. Unanchored,
+# `infrastructure/` also matched `backend/app/infrastructure/` and stripped that
+# Python package from the function bundle, which made every request fail with
+# ModuleNotFoundError: No module named 'app.infrastructure'.
+/documentation/
+/rules/
+/tracker/
+/api-design/
+/database-design/
+/infrastructure/
