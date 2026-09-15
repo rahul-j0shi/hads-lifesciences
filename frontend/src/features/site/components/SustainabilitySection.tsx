@@ -21,7 +21,7 @@ export function SustainabilitySection(): React.JSX.Element {
               srcSet={SUSTAINABILITY.image.srcSet}
               sizes="(min-width: 1024px) 320px, 100vw"
               width={480}
-              height={360}
+              height={320}
               alt={SUSTAINABILITY.image.alt}
               loading="lazy"
               decoding="async"

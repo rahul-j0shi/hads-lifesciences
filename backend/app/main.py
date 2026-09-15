@@ -135,8 +135,17 @@ def _fallback_app(reason: str) -> FastAPI:
     return fallback
 
 
-try:
-    app = create_app()
-except Exception as _exc:  # noqa: BLE001 - import must not raise in a function runtime
-    logging.getLogger(__name__).exception("application assembly failed")
-    app = _fallback_app(type(_exc).__name__)
+def _build_app() -> FastAPI:
+    """Assemble the app, falling back rather than raising at import time."""
+    try:
+        return create_app()
+    except Exception as exc:  # noqa: BLE001 - import must not raise in a function runtime
+        logging.getLogger(__name__).exception("application assembly failed")
+        return _fallback_app(type(exc).__name__)
+
+
+# Must stay a plain module-level assignment. The hosting platform locates the
+# ASGI handler by statically analysing this file for a top-level `app`, so
+# wrapping this line in try/except makes the build fail with
+# "Handler function \"app\" not found in app/main.py".
+app = _build_app()

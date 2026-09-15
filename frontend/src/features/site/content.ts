@@ -202,9 +202,10 @@ export const SUSTAINABILITY = {
   image: {
     src: '/assets/p05-480.webp',
     srcSet: '/assets/p05-480.webp 480w, /assets/p05-960.webp 960w',
-    // Illustrative only. It proves nothing about sourcing and must never be
-    // captioned as a HADS farm or supplier.
-    alt: '',
+    // Informative, so it carries real alt text describing only what is visible.
+    // It proves nothing about sourcing and must never be captioned as a HADS
+    // farm or supplier: the visible caption discloses that it is illustrative.
+    alt: 'Hands holding a seedling above soil',
     caption: 'Illustrative image',
   },
 } as const

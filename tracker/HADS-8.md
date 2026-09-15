@@ -37,6 +37,8 @@ Assets
 - [ ] B02: the four emblem masters supplied, or their omission explicitly accepted.
 - [ ] Any supplied or generated asset stored under `idea/assets/<asset-id>-<short-name>/` with a complete provenance note, including license terms and whether commercial use is permitted.
 
+Asset inventory status after HADS-15: eleven asset IDs have retained local review files or temporary fallbacks. P01 to P04 are intentionally excluded from default development and have no local candidate files. Three remain unresolved: B01 and B02 require client files or an explicit fallback decision; R01 is needed only if B02 is unavailable and the client requests reconstruction. S01 and F01 have temporary fallbacks, but the B01 decision still controls final replacement or acceptance.
+
 Decisions
 
 - [ ] Open decisions D1 to D7 in design concept section 3.6 each answered, or the recorded default explicitly accepted.

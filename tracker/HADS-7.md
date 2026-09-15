@@ -1,8 +1,8 @@
 # HADS-7: Implement the public HADS Lifesciences website
 
-Status: planned
+Status: ready
 Owner: unassigned
-Dependencies: [HADS-2](HADS-2.md) for the running foundation and deployment path, [HADS-6](HADS-6.md) and [HADS-9](HADS-9.md) for the design specification, [HADS-8](HADS-8.md) for the client inputs that gate public release
+Dependencies: [HADS-2](HADS-2.md) for the running foundation and deployment path, [HADS-15](HADS-15.md) for the final design and asset handoff, [HADS-8](HADS-8.md) for the client inputs that gate public release
 Scope: build, test and release the complete informational page specified in the [design concept](../idea/design_concept.md)
 Out of scope: authentication, payments, catalog, admin, CMS, contact API, analytics, cookie storage, paid hosting, paid fonts and paid image services
 Context: [design concept](../idea/design_concept.md), [ADR-006](../documentation/decisions.md#adr-006-public-website-content-and-delivery-model), [frontend boundary](../frontend/README.md), [performance rules](../rules/performance.md), [workflow](../rules/workflow.md)
@@ -21,9 +21,9 @@ The seven open decisions in design concept section 3.6 each have an implementabl
 | Operations | Add the full-page transfer budget to [performance rules](../rules/performance.md). Decide and record the pre-rendering posture. Add favicon, share image and a 404 answer. No new provider, runtime or paid service |
 
 Contract gate: not applicable. This change introduces no HTTP or persistence behavior. If a later revision needs either, return to [workflow](../rules/workflow.md) step 2 before writing dependent code.
-Review: pending implementation readiness review. Record reviewer, date and the design concept revision hash used.
+Review: implementation readiness accepted on 2026-09-15 under HADS-15. Final design SHA-256: `9da0898d4c8c40142139bef4f47e284e91dcbf2d7cf8b224d6b5029b17090f54`. Asset manifest SHA-256: `9f2a9c1888e68c9ba50af08ddaabf631da4b76da363edbe40533e8c77a7c4ce7`.
 
-Source prerequisite: the local `idea/` package is intentionally outside the public repository. Before implementation, obtain it from the repository owner and verify the design hash recorded by HADS-9. Do not implement from broken hosted-repository links or reconstruct the specification from ticket summaries.
+Source prerequisite: the local `idea/` package is intentionally outside the public repository. Before implementation, obtain it from the repository owner and verify the final design and manifest hashes recorded by HADS-15. Copy only the development files named in `idea/assets/README.md`; do not bundle review masters or provenance. Do not reconstruct the specification from ticket summaries.
 
 ## Acceptance criteria
 
@@ -40,6 +40,7 @@ Build
 - [ ] The portfolio exposes exactly one representation at every width.
 - [ ] Neither artifact listed in design concept section 2.3 is reproduced: card titles render once and card tops align.
 - [ ] Every color used resolves to a token from design concept section 7.1.
+- [ ] Only retained files from the final asset manifest are used. P01 to P04 and superseded iterations do not enter the frontend.
 
 Accessibility and responsive
 
@@ -62,4 +63,4 @@ None yet. No implementation exists. Do not mark done until hosted acceptance is 
 
 ## Remaining work or blockers
 
-Not started. Blocking for public release, not for implementation: the client evidence, brand assets and market confirmation tracked in [HADS-8](HADS-8.md). If those remain unresolved at release time, keep the neutral foundation page live and record the exact outstanding items here.
+Ready for local implementation. Blocking for public release, not for development: the client evidence, brand assets and market confirmation tracked in [HADS-8](HADS-8.md). If those remain unresolved at release time, keep the neutral foundation page live and record the exact outstanding items here.
