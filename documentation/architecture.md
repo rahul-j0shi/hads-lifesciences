@@ -15,7 +15,7 @@ flowchart LR
     B -->|TLS, backend credential only| M[MongoDB Atlas Free]
 ```
 
-One React/Vite frontend, one FastAPI backend, one Atlas database. Netlify hosts static assets; Render hosts the Python process. There is no need to deploy both Netlify and Vercel. Vercel is a conditional alternative in [hosting decisions](decisions.md#adr-002-zero-budget-hosting).
+One React/Vite frontend, one FastAPI backend, one Atlas database. Netlify hosts static assets; Render hosts the Python process. Vercel was evaluated and rejected on plan eligibility, not on technical fit; see [ADR-005](decisions.md#adr-005-vercel-resource-assumptions). Render is the backend host, not a fallback.
 
 The landing page renders without waiting for the API. It fetches `GET /api/v1/welcome` once with a bounded timeout, renders the response if available, and offers manual retry on failure. Health endpoints validate the server and Mongo wiring. The first slice persists no business data and needs no collection or seed script.
 

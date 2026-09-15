@@ -15,7 +15,7 @@ The owner chose Python, React and MongoDB and requires a lightweight prototype t
 | MongoDB | Owner-selected storage; the first slice only verifies its connection | [Database design](../../database-design/README.md) |
 | One small backend | The current behavior does not need independently operated services | [Architecture](../architecture.md) |
 | HTTP caching first | Reuse ordinary response caching before introducing another service to configure and maintain | [Performance rules](../../rules/performance.md#caching-plan-http-first) |
-| Vercel preference and Render fallback | Hosting must satisfy project eligibility, connectivity and the zero-spend constraint | [Hosting decisions](../decisions.md#adr-002-zero-budget-hosting), [Vercel assumptions](../decisions.md#adr-005-vercel-resource-assumptions) |
+| Netlify and Render, not Vercel | Hosting must satisfy plan eligibility as well as technical fit. Vercel Hobby forbids commercial use, which this project is, so it was rejected despite supporting FastAPI | [Hosting decisions](../decisions.md#adr-002-zero-budget-hosting), [Vercel rejection](../decisions.md#adr-005-vercel-resource-assumptions) |
 | External identity later | Login entails more than a form; delegate identity functions rather than invent security primitives | [Identity decision](../decisions.md#adr-004-use-external-identity-and-payment-providers-later) |
 
 Current prices, quotas and configuration commands stay in the linked decision/runbook documents. Copying them into a tutorial would create another place to become outdated.

@@ -19,13 +19,13 @@ React supports the requested component ecosystem; FastAPI keeps a typed HTTP con
 | Netlify Free | Credit plan has 300 credits/month and a hard limit; exhausted credits pause sites | Avoid needless production deploys; inspect team-wide usage and confirm actual account plan |
 | Render Free | Sleeps after 15 idle minutes; wake-up can take about a minute; 750 instance-hours/workspace/month; ephemeral disk | Graceful UI fallback, one API service, no file persistence or always-on jobs |
 | Atlas Free (formerly M0) | 0.5 GB including indexes; 500 connections; no managed backups; may pause after 30 idle days | Small connection pool, no binary assets, synthetic data and manual export when needed |
-| Vercel Hobby | Personal, non-commercial use only | HADS business prototype must not assume eligibility; no checkout required for this restriction to matter |
+| Vercel Hobby | Personal, non-commercial use only | **Not eligible.** Resolved against this project in [ADR-005](#adr-005-vercel-resource-assumptions) |
 
 Sources: [Netlify credits](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/), [Netlify plans](https://www.netlify.com/pricing/), [Render free constraints](https://render.com/docs/free), [Atlas constraints](https://www.mongodb.com/docs/atlas/reference/free-shared-limitations/), [Vercel fair use](https://vercel.com/docs/limits/fair-use-guidelines).
 
 Render can bill bandwidth/build overages when a payment method is attached; without one it suspends services/builds at the applicable limit. Keep no payment method on this prototype workspace, inspect spend controls, and do not enable paid instances. External database traffic can also cause suspension at unusually high volumes. No keep-alive jobs to defeat sleeping. [Render limits](https://render.com/docs/free).
 
-Vercel supports FastAPI technically, but this does not override its usage terms. Consider it only with confirmed eligibility or an explicitly available commercial entitlement; do not purchase Pro under the $0 constraint. Netlify remains the selected static host; account terms should still be checked at signup. Real payment processing, identity hosting/email, domains and future usage are separate budget decisions, not included free guarantees.
+Vercel supports FastAPI technically, but this does not override its usage terms, and those terms exclude this project. See [ADR-005](#adr-005-vercel-resource-assumptions). Netlify remains the selected static host; account terms should still be checked at signup. Real payment processing, identity hosting/email, domains and future usage are separate budget decisions, not included free guarantees.
 
 ## ADR-003: Spatiotemporal composability
 
@@ -41,11 +41,15 @@ This static Python composition does **not** implement reactive component activat
 
 ## ADR-005: Vercel resource assumptions
 
-User preference: Vercel Free, subject to ADR-002 eligibility and secure Mongo connectivity. Keep the backend portable to it; Render is the documented fallback when those prerequisites fail. Do not provision a paid plan.
+**Superseded by rejection, 2026-09-15.** Vercel is not an available host for this project. The earlier entry recorded an owner preference for Vercel Free and left eligibility open; current plan terms close it.
 
-As checked 2026-09-15, Vercel documents **2 GB maximum memory for Hobby with Fluid compute** and a **500 MB standard uncompressed Python function bundle**. These are different from storage, transfer and monthly usage quotas; “1 GB free” is not a complete capacity model. Account/runtime settings can differ, so verify the actual dashboard. [Official function limits](https://vercel.com/docs/functions/limitations).
+Vercel restricts Hobby teams to non-commercial personal use and requires Pro or Enterprise for all commercial usage. It defines commercial usage as any deployment used for the financial gain of anyone involved in any part of the project's production, listing **"receiving payment to create, update, or host the site"** and **"advertising the sale of a product or service"** as examples.
 
-HADS deliberately targets much less memory through [performance budgets](../rules/performance.md). This remains a design target until HADS-2 measures the actual process/bundle. Runtime fit does not resolve Hobby commercial-use eligibility.
+Both apply here. HADS Lifesciences is a commercial business whose site advertises its products, and paid development work would independently disqualify it. Purchasing Pro is excluded by the [zero-cost constraint](../rules/README.md#zero-cost-constraint). [Vercel fair use guidelines](https://vercel.com/docs/limits/fair-use-guidelines), checked 2026-09-15.
+
+The technical notes from the earlier revision remain accurate and remain irrelevant to this decision: Hobby documents 2 GB maximum memory with Fluid compute and a 500 MB uncompressed Python function bundle. [Official function limits](https://vercel.com/docs/functions/limitations). Runtime fit never resolved eligibility, and eligibility is what fails.
+
+**Consequence:** Render Free is the backend host, not a fallback. Keep the backend portable by depending on the [environment contract](../infrastructure/README.md) rather than provider APIs, so a future move stays a configuration change. Reopen only with a written commercial entitlement from Vercel, or if the project's commercial status changes.
 
 ## ADR-006: Public website content and delivery model
 
