@@ -67,7 +67,30 @@ The crash is fixed in `9002fa0`, verified locally with no environment at all: li
 
 **Still outstanding:** Atlas Network Access must allow `0.0.0.0/0` before deployed readiness can return 200, because Vercel Hobby publishes no stable outbound IP ranges.
 
-Live URLs/revisions: `https://hads-lifesciences.vercel.app`, deployment `9002fa0`. Do not mark done until hosted acceptance is verified; if deployment prerequisites are unavailable, record completed local work and the remaining blocker separately.
+### Resolution, 2026-09-15
+
+**The API is live and correct.** Two defects, both mine, kept it broken while the symptom looked like a runtime fault.
+
+| # | Defect | Effect |
+| --- | --- | --- |
+| 1 | `app = create_app()` was wrapped in `try/except` as an import-time safety net | Vercel locates the ASGI handler by statically analysing the entrypoint for a module-level `app`. The build failed with `Handler function "app" not found in app/main.py`. Three deployments sat in `ERROR` while the alias kept serving an older build, so every later fix was never running and the 500s came from code that predated them |
+| 2 | `.vercelignore` listed `infrastructure/` without a leading slash | The pattern matches a directory of that name at any depth, so it stripped `backend/app/infrastructure/` from the function bundle. The runtime log showed `ModuleNotFoundError: No module named 'app.infrastructure'`, raised at import before any guard could run |
+
+The guard is retained inside `_build_app()` so `app = _build_app()` stays a plain top-level assignment, and every documentation pattern in `.vercelignore` is now anchored to the repository root.
+
+Verified live on deployment `b5df213`:
+
+| Path | Result |
+| --- | --- |
+| `/` | 200 `text/html` |
+| `/health/live` | 200 `application/json`, `{"status":"alive"}` |
+| `/api/v1/welcome` | 200, body exactly `{"name":"HADS Lifesciences","message":"Website coming soon."}`, `cache-control: public, max-age=60`, `Vary: Origin`, `X-Request-ID` present |
+| `/health/ready` | 503 `application/problem+json`, correct while Atlas network access is still closed to Vercel |
+| `/does-not-exist` | 404 |
+
+**Still outstanding:** Atlas Network Access must allow `0.0.0.0/0` before deployed readiness returns 200, because Vercel Hobby publishes no stable outbound IP ranges.
+
+Live URLs/revisions: `https://hads-lifesciences.vercel.app`, deployment `b5df213`. Do not mark done until hosted acceptance is verified; if deployment prerequisites are unavailable, record completed local work and the remaining blocker separately.
 
 ## Contract readiness before implementation
 
