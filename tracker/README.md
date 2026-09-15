@@ -13,7 +13,8 @@ Status and readiness gates are owned by [workflow](../rules/workflow.md); file/I
 | [HADS-7](HADS-7.md) | planned | Implement and release the public HADS Lifesciences website | HADS-2, HADS-6, HADS-9, HADS-8 for release |
 | [HADS-8](HADS-8.md) | blocked | Client evidence, brand assets and design decisions intake | HADS-6, HADS-9; blocked on client input |
 | [HADS-9](HADS-9.md) | done | Reassess and finalize design revision 3 | HADS-6 |
+| [HADS-10](HADS-10.md) | in-progress | Harden image prompts and generate the first asset candidate | HADS-9 |
 
-Next unallocated ID: HADS-10. Authentication and payments are future requirements, not active implementation tickets.
+Next unallocated ID: HADS-11. Authentication and payments are future requirements, not active implementation tickets.
 
 HADS-7 can be implemented before HADS-8 is answered, because every open design decision carries a recorded default. HADS-8 gates public release, not development.
