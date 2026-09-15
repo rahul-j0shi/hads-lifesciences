@@ -59,3 +59,12 @@ Contract gate: draft. The existing OpenAPI is a design baseline; finish its full
 | Operations | Runtime pins, test gates, environment wiring and provider configuration in linked runbook |
 
 Reviewer/date/revision: pending HADS-2 readiness review. Hosting prerequisites may remain tracked separately from local implementation readiness.
+
+## Remaining work or blockers
+
+**Blocked on two owner actions in a browser, both one-time.**
+
+1. **Install the Vercel GitHub integration.** The REST API refuses to link the repository without it: `To link a GitHub repository, you need to install the GitHub integration first.` Until then Vercel cannot build from GitHub. Direct CLI upload from the development machine fails with `fetch failed` on every attempt, including single-tarball mode, while plain authenticated API calls to the same host return 200. That makes it an upload-path problem on this network, not an authentication problem. Connecting GitHub moves the build server-side and makes the local network irrelevant.
+2. **Set Atlas Network Access to allow `0.0.0.0/0`.** Vercel Hobby publishes no stable outbound IP ranges. Until this is set, the deployed `/health/ready` correctly returns 503 while liveness and welcome still return 200. The database password then becomes the only access control, as recorded in [ADR-002](../documentation/decisions.md#adr-002-zero-budget-hosting).
+
+Engineering work still outstanding, none of it blocked: test suite, `scripts/verify.py`, CI workflow, `uv.lock`, backend lint and type checks, and measurement of warm latency and resident memory.
