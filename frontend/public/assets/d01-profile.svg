@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="dCore" x1="0.2" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#D2508A"/>
+      <stop offset="0.5" stop-color="#BD2470"/>
+      <stop offset="1" stop-color="#8C1A50"/>
+    </linearGradient>
+    <linearGradient id="dArc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.35" stop-color="#DCE3EB"/>
+      <stop offset="1" stop-color="#A9B6C6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Abstract mark for Individual Well-Being: a single centre with balanced
+       rings widening around it. Deliberately geometric. A bespoke portrait
+       emblem belongs to the client brand set (B02) and is not reconstructed
+       here, and a hand-drawn face would not match the rendered emblem family. -->
+  <circle cx="80" cy="80" r="62" fill="none" stroke="url(#dArc)" stroke-width="3" opacity="0.5"/>
+  <circle cx="80" cy="80" r="47" fill="none" stroke="url(#dArc)" stroke-width="3.5" opacity="0.75"/>
+  <circle cx="80" cy="80" r="32" fill="none" stroke="url(#dArc)" stroke-width="4"/>
+
+  <!-- Navy accent arc, matching the ribbon in the client artwork's D device. -->
+  <path d="M80 33 A47 47 0 0 1 127 80" fill="none" stroke="#13306B" stroke-width="4"
+        stroke-linecap="round" opacity="0.9"/>
+
+  <circle cx="80" cy="80" r="17" fill="url(#dCore)"/>
+  <circle cx="74" cy="73" r="5.5" fill="#FFFFFF" opacity="0.32"/>
+</svg>

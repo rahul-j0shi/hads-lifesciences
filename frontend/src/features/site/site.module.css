@@ -335,15 +335,35 @@
   margin: 32px auto 0;
   max-width: 60ch;
 }
-.rail { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 40px 0 24px; }
+.rail { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 40px 0 20px; }
+/* A horizontal rule that turns up at its far end and terminates in a dot, as in
+   the client artwork. The dot is the ::after marker on the outer end. */
 .railArm {
   display: none;
+  position: relative;
   width: 80px;
-  height: 10px;
+  height: 11px;
   border-top: 1px solid var(--brand-magenta);
-  border-left: 1px solid var(--brand-magenta);
+  border-right: 1px solid var(--brand-magenta);
+  border-top-right-radius: 2px;
 }
-.railArmRight { border-left: 0; border-right: 1px solid var(--brand-magenta); }
+.railArm::after {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--brand-magenta);
+}
+.railArmRight {
+  border-right: 0;
+  border-left: 1px solid var(--brand-magenta);
+  border-top-right-radius: 0;
+  border-top-left-radius: 2px;
+}
+.railArmRight::after { left: auto; right: -3px; }
 @media (min-width: 480px) { .railArm { display: block; } }
 .railLabel {
   font-size: 0.875rem;
@@ -354,7 +374,7 @@
   margin: 0;
   text-align: center;
 }
-.closingLine { max-width: 54ch; margin-bottom: 0; }
+.closingLine { max-width: 54ch; margin-left: auto; margin-right: auto; margin-bottom: 0; }
 
 /* ---------- delivery ---------- */
 .conceptIcon { width: 56px; height: 56px; }
@@ -382,7 +402,7 @@
 
 /* ---------- sustainability ---------- */
 .sustainGrid { display: grid; gap: 24px; margin-top: 32px; grid-template-columns: 1fr; }
-@media (min-width: 1024px) { .sustainGrid { grid-template-columns: 1fr 1fr 320px; align-items: start; } }
+@media (min-width: 1024px) { .sustainGrid { grid-template-columns: 1fr 1fr 320px; align-items: stretch; } }
 .panel {
   background: var(--canvas);
   border-radius: var(--radius-card);
@@ -431,8 +451,23 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 12px;
+  margin: 12px 0 0;
 }
+
+.toTop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-functional);
+  border-radius: 50%;
+  color: var(--brand-navy);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease);
+}
+.toTop:hover { background: var(--brand-navy); color: #fff; border-color: var(--brand-navy); }
 .emailLink {
   color: var(--ink-inverse);
   font-size: var(--fs-lead);

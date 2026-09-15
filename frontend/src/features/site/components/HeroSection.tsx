@@ -47,9 +47,6 @@ export function HeroSection(): React.JSX.Element {
           <a className={styles.buttonOutline} href={HERO.secondary.href}>
             {HERO.secondary.label}
           </a>
-          <a className={styles.textLink} href={HERO.tertiary.href}>
-            {HERO.tertiary.label}
-          </a>
         </div>
       </div>
     </section>

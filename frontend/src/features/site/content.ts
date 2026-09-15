@@ -66,7 +66,6 @@ export const HERO = {
   mission: { first: 'Enjoy Every', second: 'Moment of Life' },
   primary: { label: 'Discover Formulations', href: '#portfolio' },
   secondary: { label: 'Explore Delivery Systems', href: '#delivery-systems' },
-  tertiary: { label: 'Contact', href: '#contact' },
 } as const
 
 export const VISION = {
@@ -105,9 +104,10 @@ export const FRAMEWORK = {
       title: 'Individual Well-Being',
       subline: 'PERSONALIZED WELLNESS SOLUTIONS',
       body: 'Personalized, adaptive wellness formulations aimed at metabolic balance, cognitive resilience, and cellular longevity.',
-      // The D emblem is a client brand letterform. It may not be generated, so
-      // this card shows no illustration until an approved master arrives (B02).
-      emblem: null,
+      // Interim emblem. The client's D is a decorated letterform and may not be
+      // reconstructed, so this is an abstract profile mark in the same material
+      // family, drawn as SVG. Replace with the approved master when B02 arrives.
+      emblem: { src: '/assets/d01-profile.svg', srcSet: '/assets/d01-profile.svg 160w' },
     },
     {
       letter: 'S',
@@ -220,9 +220,6 @@ export const VALUES: readonly ValueItem[] = [
 export const CONTACT = {
   heading: 'Get in Touch',
   lead: 'For partnerships, scientific collaborations, and distribution inquiries:',
-  copyIdle: 'Copy email address',
-  copySuccess: 'Email address copied.',
-  copyFailure: 'Could not copy. Select the email address to copy it.',
   inquiries: [
     { label: 'Partnerships', subject: 'HADS partnership inquiry' },
     { label: 'Scientific Collaborations', subject: 'HADS scientific collaboration inquiry' },
@@ -230,4 +227,4 @@ export const CONTACT = {
   ],
 } as const
 
-export const FOOTER = { backToTop: 'Back to top' } as const
+export const FOOTER = { backToTop: 'Back to top' } as const // used as the button's accessible name
