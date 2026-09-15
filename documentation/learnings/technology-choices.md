@@ -15,7 +15,7 @@ The owner chose Python, React and MongoDB and requires a lightweight prototype t
 | MongoDB | Owner-selected storage; the first slice only verifies its connection | [Database design](../../database-design/README.md) |
 | One small backend | The current behavior does not need independently operated services | [Architecture](../architecture.md) |
 | HTTP caching first | Reuse ordinary response caching before introducing another service to configure and maintain | [Performance rules](../../rules/performance.md#caching-plan-http-first) |
-| Netlify and Render, not Vercel | Hosting must satisfy plan eligibility as well as technical fit. Vercel Hobby forbids commercial use, which this project is, so it was rejected despite supporting FastAPI | [Hosting decisions](../decisions.md#adr-002-zero-budget-hosting), [Vercel rejection](../decisions.md#adr-005-vercel-resource-assumptions) |
+| One Vercel project for both halves | Hosting must satisfy plan eligibility as well as technical fit. Vercel runs the React build and the FastAPI app on one domain, which removes CORS and gives the API 2 GB instead of Render's 512 MB. Its Hobby plan carries a non-commercial condition the owner accepted for a private prototype | [Hosting decisions](../decisions.md#adr-002-zero-budget-hosting), [Vercel condition](../decisions.md#adr-005-vercel-hosting-and-its-eligibility-condition) |
 | External identity later | Login entails more than a form; delegate identity functions rather than invent security primitives | [Identity decision](../decisions.md#adr-004-use-external-identity-and-payment-providers-later) |
 
 Current prices, quotas and configuration commands stay in the linked decision/runbook documents. Copying them into a tutorial would create another place to become outdated.

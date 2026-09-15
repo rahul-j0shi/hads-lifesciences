@@ -12,20 +12,22 @@ React supports the requested component ecosystem; FastAPI keeps a typed HTTP con
 
 ## ADR-002: Zero-budget hosting
 
-**Accepted baseline:** Netlify Free frontend + Render Free Python web service + Atlas Free. Use provider subdomains and synthetic data. Cost target is $0 within limits, with suspension acceptable. This is not a promise of perpetual availability or unchanged provider pricing.
+**Revised 2026-09-15. Accepted baseline: Vercel Hobby for both the website and the API, plus MongoDB Atlas Free.** Use provider subdomains and synthetic data. Cost target is $0 within limits, with suspension acceptable. This is not a promise of perpetual availability or unchanged provider pricing.
+
+The earlier baseline was Netlify Free for static assets plus Render Free for the Python service. It was replaced because Render's free instance provides 512 MB and 0.1 CPU, and because two providers meant two origins, CORS configuration between them, and a rebuild of the frontend whenever the API URL changed. One provider serving both halves from one domain removes all three problems.
 
 | Service | Verified constraint | Design consequence |
 | --- | --- | --- |
-| Netlify Free | Credit plan has 300 credits/month and a hard limit; exhausted credits pause sites | Avoid needless production deploys; inspect team-wide usage and confirm actual account plan |
-| Render Free | Sleeps after 15 idle minutes; wake-up can take about a minute; 750 instance-hours/workspace/month; ephemeral disk | Graceful UI fallback, one API service, no file persistence or always-on jobs |
+| Vercel Hobby | Monthly guidelines: 100 GB Fast Data Transfer, 1,000,000 function invocations, 10 GB Fast Origin Transfer, 4 hours Active CPU, 360 GB-hours Provisioned Memory. Up to 2 GB function memory on Fluid compute. 500 MB standard Python bundle | One project with two services on one domain. No CORS. Relative API paths, so no rebuild when a URL changes. Eligibility condition in [ADR-005](#adr-005-vercel-hosting-and-its-eligibility-condition) |
+| Vercel functions | Serverless, many short-lived instances; shutdown cleanup capped at 500 ms after SIGTERM | Small Mongo pool per instance, 2 to 5 rather than 10; fast, non-blocking client close in lifespan; measure Atlas connection counts |
+| Vercel egress | No stable outbound IP addresses on Hobby | Atlas Network Access must allow `0.0.0.0/0`. The database password becomes the only access control, so it must be long, unique and rotated on suspicion |
 | Atlas Free (formerly M0) | 0.5 GB including indexes; 500 connections; no managed backups; may pause after 30 idle days | Small connection pool, no binary assets, synthetic data and manual export when needed |
-| Vercel Hobby | Personal, non-commercial use only | **Not eligible.** Resolved against this project in [ADR-005](#adr-005-vercel-resource-assumptions) |
 
-Sources: [Netlify credits](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/), [Netlify plans](https://www.netlify.com/pricing/), [Render free constraints](https://render.com/docs/free), [Atlas constraints](https://www.mongodb.com/docs/atlas/reference/free-shared-limitations/), [Vercel fair use](https://vercel.com/docs/limits/fair-use-guidelines).
+Sources: [Vercel fair use](https://vercel.com/docs/limits/fair-use-guidelines), [Vercel function limits](https://vercel.com/docs/functions/limitations), [Vercel Services](https://vercel.com/docs/services), [FastAPI on Vercel](https://vercel.com/docs/frameworks/backend/fastapi), [Atlas constraints](https://www.mongodb.com/docs/atlas/reference/free-shared-limitations/).
 
-Render can bill bandwidth/build overages when a payment method is attached; without one it suspends services/builds at the applicable limit. Keep no payment method on this prototype workspace, inspect spend controls, and do not enable paid instances. External database traffic can also cause suspension at unusually high volumes. No keep-alive jobs to defeat sleeping. [Render limits](https://render.com/docs/free).
+Keep no payment method on the Vercel account so usage stops rather than bills. Real payment processing, identity hosting and email, domains and future usage remain separate budget decisions, not included free guarantees.
 
-Vercel supports FastAPI technically, but this does not override its usage terms, and those terms exclude this project. See [ADR-005](#adr-005-vercel-resource-assumptions). Netlify remains the selected static host; account terms should still be checked at signup. Real payment processing, identity hosting/email, domains and future usage are separate budget decisions, not included free guarantees.
+**Rejected alternatives.** Netlify Free cannot run a FastAPI application, so it always required a second provider. Render Free remains viable and is the natural fallback if the Vercel eligibility condition stops holding, at the cost of 512 MB, 0.1 CPU, a 15-minute idle spin-down and the return of CORS. Koyeb no longer publishes a free compute tier. Fly.io and Railway are trial-based and require a card. Google Cloud Run's free quota is generous but requires a billing account, and budget alerts notify rather than stop spend, which conflicts with the zero-cost rule. Oracle Always Free offers far more memory but requires a card, was silently halved from 4 OCPU and 24 GB to 2 OCPU and 12 GB on 15 June 2026, and is a raw VM whose operating system, TLS and patching would become this project's problem.
 
 ## ADR-003: Spatiotemporal composability
 
@@ -39,17 +41,23 @@ This static Python composition does **not** implement reactive component activat
 
 **Deferred provider choice:** OIDC identity, hosted payment checkout and signed webhooks. Keycloak is a candidate, not an included free hosted service. Its supported storage uses relational databases such as PostgreSQL, not the application MongoDB. Persistent hosting, a supported database and email delivery must be budgeted before choosing it. [Keycloak database support](https://www.keycloak.org/server/db). Detailed boundaries: [security and integrations](security-and-integrations.md).
 
-## ADR-005: Vercel resource assumptions
+## ADR-005: Vercel hosting and its eligibility condition
 
-**Superseded by rejection, 2026-09-15.** Vercel is not an available host for this project. The earlier entry recorded an owner preference for Vercel Free and left eligibility open; current plan terms close it.
+**Accepted 2026-09-15, conditionally, by explicit owner decision.** Vercel Hobby hosts both the website and the API. This entry has changed twice: it began as an owner preference with eligibility unresolved, was briefly recorded as a rejection on eligibility grounds, and is now an acceptance with the condition stated and scoped.
 
-Vercel restricts Hobby teams to non-commercial personal use and requires Pro or Enterprise for all commercial usage. It defines commercial usage as any deployment used for the financial gain of anyone involved in any part of the project's production, listing **"receiving payment to create, update, or host the site"** and **"advertising the sale of a product or service"** as examples.
+**The condition.** Vercel restricts Hobby teams to non-commercial personal use and requires Pro or Enterprise for commercial usage. It defines commercial usage as any deployment used for the financial gain of anyone involved in any part of the project's production, listing "receiving payment to create, update, or host the site" and "advertising the sale of a product or service" among its examples. [Vercel fair use guidelines](https://vercel.com/docs/limits/fair-use-guidelines), checked 2026-09-15.
 
-Both apply here. HADS Lifesciences is a commercial business whose site advertises its products, and paid development work would independently disqualify it. Purchasing Pro is excluded by the [zero-cost constraint](../rules/README.md#zero-cost-constraint). [Vercel fair use guidelines](https://vercel.com/docs/limits/fair-use-guidelines), checked 2026-09-15.
+**The owner's decision and its reasoning.** The deployment is a private prototype that is not being scaled, linked, indexed or promoted. On that reading it is closer to development and internal review than to a commercial deployment. The owner has weighed this and accepted it. The terms turn on purpose rather than traffic, so low usage does not by itself resolve the question, and that caveat was raised before the decision was taken.
 
-The technical notes from the earlier revision remain accurate and remain irrelevant to this decision: Hobby documents 2 GB maximum memory with Fluid compute and a 500 MB uncompressed Python function bundle. [Official function limits](https://vercel.com/docs/functions/limitations). Runtime fit never resolved eligibility, and eligibility is what fails.
+**Scope of the acceptance.** It covers a private, unpublicized prototype only. Reopen this ADR before any of the following, each of which makes the deployment commercial by Vercel's own definition:
 
-**Consequence:** Render Free is the backend host, not a fallback. Keep the backend portable by depending on the [environment contract](../infrastructure/README.md) rather than provider APIs, so a future move stays a configuration change. Reopen only with a written commercial entitlement from Vercel, or if the project's commercial status changes.
+- The site becomes the public HADS Lifesciences website, or is linked, indexed or promoted anywhere.
+- A custom domain is attached.
+- Anyone is paid for work on it.
+
+**Consequence if the condition stops holding:** move to Vercel Pro, or back to the previous Netlify and Render split, which remains documented in this register's rejected alternatives. Keep the application portable by depending on the [environment contract](../infrastructure/README.md) rather than provider APIs, so the move stays a configuration change. Relative API paths and lifespan-managed resources both help here.
+
+Technical notes that informed the choice and are independent of eligibility: Hobby functions run on Fluid compute with up to 2 GB memory against Render Free's 512 MB and 0.1 CPU, FastAPI lifespan events are supported, and uv works with zero configuration. [Function limits](https://vercel.com/docs/functions/limitations).
 
 ## ADR-006: Public website content and delivery model
 

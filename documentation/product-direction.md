@@ -1,6 +1,6 @@
 # Product direction from the image
 
-Source: [owner image](../idea/image.png), inspected 2026-09-15. Only this image was present; the write-up is pending.
+Sources: [client image and written brief](../idea/README.md), inspected 2026-09-15. The complete design interpretation is maintained in [the design concept](../idea/design_concept.md).
 
 ## Observed content
 

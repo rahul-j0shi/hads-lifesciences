@@ -2,7 +2,7 @@
 
 Status: planned
 Owner: unassigned
-Dependencies: [HADS-2](HADS-2.md) for the running foundation and deployment path, [HADS-6](HADS-6.md) for the design specification, [HADS-8](HADS-8.md) for the client inputs that gate public release
+Dependencies: [HADS-2](HADS-2.md) for the running foundation and deployment path, [HADS-6](HADS-6.md) and [HADS-9](HADS-9.md) for the design specification, [HADS-8](HADS-8.md) for the client inputs that gate public release
 Scope: build, test and release the complete informational page specified in the [design concept](../idea/design_concept.md)
 Out of scope: authentication, payments, catalog, admin, CMS, contact API, analytics, cookie storage, paid hosting, paid fonts and paid image services
 Context: [design concept](../idea/design_concept.md), [ADR-006](../documentation/decisions.md#adr-006-public-website-content-and-delivery-model), [frontend boundary](../frontend/README.md), [performance rules](../rules/performance.md), [workflow](../rules/workflow.md)
@@ -22,6 +22,8 @@ The seven open decisions in design concept section 3.6 each have an implementabl
 
 Contract gate: not applicable. This change introduces no HTTP or persistence behavior. If a later revision needs either, return to [workflow](../rules/workflow.md) step 2 before writing dependent code.
 Review: pending implementation readiness review. Record reviewer, date and the design concept revision hash used.
+
+Source prerequisite: the local `idea/` package is intentionally outside the public repository. Before implementation, obtain it from the repository owner and verify the design hash recorded by HADS-9. Do not implement from broken hosted-repository links or reconstruct the specification from ticket summaries.
 
 ## Acceptance criteria
 
@@ -49,7 +51,7 @@ Accessibility and responsive
 
 Release
 
-- [ ] Bundle and transfer measured against the budgets in design concept section 12.2 and recorded in [performance rules](../rules/performance.md).
+- [ ] Bundle and transfer measured against the budgets already recorded in [performance rules](../rules/performance.md) and design concept section 12.2.
 - [ ] Favicon, share image, 404 answer and print stylesheet in place; pre-rendering decision recorded.
 - [ ] Frontend verification gate passes and a browser smoke test covers the anchors, the menu and the copy control.
 - [ ] Deployed to the zero-cost hosting path with the live URL, revision and smoke evidence recorded here.

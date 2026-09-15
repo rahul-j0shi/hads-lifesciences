@@ -10,14 +10,16 @@ Apply the [first-principles check](../rules/engineering.md#first-principles-desi
 
 ```mermaid
 flowchart LR
-    U[Browser: React / TypeScript] -->|Static assets over HTTPS| N[Netlify CDN]
-    U -->|Public read-only JSON over HTTPS| B[Render: Python FastAPI]
+    U[Browser] -->|"/*  static assets"| W[Vercel service: React build on CDN]
+    U -->|"/api/*  and  /health/*  JSON"| B[Vercel service: Python FastAPI function]
     B -->|TLS, backend credential only| M[MongoDB Atlas Free]
 ```
 
-One React/Vite frontend, one FastAPI backend, one Atlas database. Netlify hosts static assets; Render hosts the Python process. Vercel was evaluated and rejected on plan eligibility, not on technical fit; see [ADR-005](decisions.md#adr-005-vercel-resource-assumptions). Render is the backend host, not a fallback.
+One React/Vite frontend, one FastAPI backend, one Atlas database, all in **one Vercel project on one domain**. Vercel builds each half as a separate service and routes by path. See [ADR-002](decisions.md#adr-002-zero-budget-hosting) and the [runbook](setup-and-hosting.md).
 
-The landing page renders without waiting for the API. It fetches `GET /api/v1/welcome` once with a bounded timeout, renders the response if available, and offers manual retry on failure. Health endpoints validate the server and Mongo wiring. The first slice persists no business data and needs no collection or seed script.
+Because both halves share an origin, the browser makes no cross-origin request: **production needs no CORS configuration at all**, and the frontend calls the API with relative paths such as `/api/v1/welcome`. Nothing has to be rebuilt when a deployment URL changes. CORS remains relevant only in local development, where the Vite dev server and the API may run on different ports.
+
+The landing page renders without waiting for the API. It fetches `GET /api/v1/welcome` once with a bounded timeout, renders the response if available, and offers manual retry on failure. The API runs as a serverless function, so instances are short-lived and numerous: the Mongo pool maximum stays small (2 to 5), lifespan shutdown must complete within 500 ms, and Atlas connection counts are measured rather than assumed. Health endpoints validate the server and Mongo wiring. The first slice persists no business data and needs no collection or seed script.
 
 ## Backend boundaries
 
@@ -34,7 +36,7 @@ FastAPI/Pydantic validate input/output. PyMongo Async supplies Mongo access; use
 
 `/health/live` proves the process serves HTTP and does not query Mongo. `/health/ready` checks Mongo with a short deadline and returns 503 on failure. Configure platform health checks against liveness; use readiness in release verification. This avoids restart loops during a database outage. Welcome remains available during that outage.
 
-API CORS allows exact configured frontend/local origins, GET initially, and no credentialed cookies. CORS is browser policy, not authorization. Use separate environment configuration for local, test and hosted prototype; previews must not silently receive production secrets or later customer data.
+In local development the API allows exact configured origins, GET initially, and no credentialed cookies. In the deployed single-project setup no cross-origin request occurs, so this configuration is empty there. CORS is browser policy, not authorization. Use separate environment configuration for local, test and hosted prototype; previews must not silently receive production secrets or later customer data.
 
 ## Planned extension points
 
