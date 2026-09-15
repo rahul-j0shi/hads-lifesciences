@@ -23,3 +23,16 @@ frontend/test-results/
 backend/reports/*
 !backend/reports/README.md
 .DS_Store
+
+# Vercel CLI local state. project.json holds ids; .env.local holds an OIDC token.
+.vercel/
+.env.local
+
+# Build artifacts
+frontend/tsconfig.tsbuildinfo
+
+# Re-assert the template exemption LAST: in gitignore the final matching pattern
+# wins, so any later .env* rule would otherwise swallow the committed templates.
+!.env.example
+!backend/.env.example
+!frontend/.env.example

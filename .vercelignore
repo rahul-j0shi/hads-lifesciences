@@ -1,0 +1,41 @@
+# Vercel installs dependencies and runs the builds itself, so uploading these
+# only makes the deploy slower and more likely to fail on a weak connection.
+node_modules/
+**/node_modules/
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Build output. Vercel produces this during the build.
+frontend/dist/
+**/tsconfig.tsbuildinfo
+
+# Client material. Kept out of the repository and out of the platform alike:
+# unreleased artwork, the content brief and the design specification.
+idea/
+
+# Local state, caches and reports.
+.git/
+.vercel/
+backend/reports/
+backend/tests/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Never upload real credentials. Vercel environment variables hold them.
+.env
+.env.*
+!.env.example
+
+# Documentation is not needed at runtime.
+documentation/
+rules/
+tracker/
+api-design/
+database-design/
+infrastructure/
