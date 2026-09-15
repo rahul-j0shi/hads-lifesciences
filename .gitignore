@@ -1,0 +1,25 @@
+# Owner inputs kept out of the published repository.
+# idea/ holds the client's unreleased artwork, their content brief and the design
+# specification. Excluded at the owner's instruction. Documents elsewhere link into
+# idea/; those links resolve in a local working copy, not on the hosted repository.
+idea/
+
+# Local credentials and environments
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+frontend/dist/
+frontend/playwright-report/
+frontend/test-results/
+backend/reports/*
+!backend/reports/README.md
+.DS_Store
