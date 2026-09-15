@@ -271,6 +271,7 @@ Always run the full gates before deploying: `uv run python scripts/verify.py` an
 | Readiness intermittently 503 under load | Too many function instances each opening a pool. Lower the pool maximum and recheck Atlas connection counts |
 | Secrets visible in the frontend bundle | A secret was given a `VITE_` prefix. Only public values may carry that prefix |
 | Function times out | Raise `maxDuration` under the service's `functions` key, but first find why a request is slow |
+| `vercel login` fails with `TypeError: fetch failed` or `Failed to fetch dist-tags from npm`, while websites load fine | Broken IPv6 on the local network. Node 17 and later try IPv6 first, and the connection hangs rather than falling back. Prefix Vercel and npm commands with `NODE_OPTIONS="--dns-result-order=ipv4first"`, or export it in your shell profile. Diagnose with `curl -4` against `curl -6` on the same host |
 
 Rollback is **Deployments**, then the last known-good deployment, then **Promote to Production**. Vercel keeps previous deployments, so rollback is a click rather than a rebuild. A code rollback cannot undo a data change; before any valuable write, follow the [backup and migration requirements](../database-design/README.md).
 
