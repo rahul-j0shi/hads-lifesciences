@@ -23,7 +23,29 @@ Finalize compatible stable versions and lockfiles; build branded responsive Reac
 
 Excludes: authentication/signup UI, payment integration, catalog, admin panel, private user data, full Cordis kernel, CMS and paid infrastructure.
 
-Validation evidence: none yet. Live URLs/revisions: none yet. Do not mark done until hosted acceptance is verified; if deployment prerequisites are unavailable, record completed local work and the remaining blocker separately.
+Validation evidence, 2026-09-15, revision `bc224ac`:
+
+Implemented against the published contract and verified by running it locally, not by inspection.
+
+| Check | Result |
+| --- | --- |
+| `GET /health/live` | 200, `cache-control: no-store`, `x-request-id` present |
+| `GET /api/v1/welcome` | 200, `public, max-age=60`, `Vary: Origin`, body exactly `{"name":"HADS Lifesciences","message":"Website coming soon."}` |
+| `GET /health/ready` | 200 `{"status":"ready"}` against the **real Atlas cluster** |
+| `GET /nope` | 404 `application/problem+json`, contract shape |
+| `POST /health/live` | 405 problem body |
+| Request id handling | Safe supplied id echoed; `bad id!!<script>` replaced with a generated one |
+| Frontend `npm run verify` | TypeScript strict passes, build succeeds |
+| Initial JS | 70.69 KiB gzip, inside the 100 KiB budget |
+| Initial page transfer | about 72 KiB gzip, inside the 300 KiB budget |
+
+Defect found and fixed during implementation: `Settings.mongodb_uri` typed as Pydantic `MongoDsn` normalized the URI and appended the default port, which PyMongo rejects for `mongodb+srv://` with "SRV URIs must not include a port number". It is now a plain string with a scheme-only validator. A regression test for this belongs in the test suite when it is added.
+
+Not yet done: no test suite, no `scripts/verify.py`, no CI workflow, no `uv.lock` (uv is not installed on the development machine), no lint or type-check run for the backend, and no measurement of warm latency or resident memory.
+
+Hosting state: Vercel project `hads-lifesciences` created on the Hobby plan with no payment method attached. Production environment variables `APP_ENV`, `MONGODB_DATABASE`, `LOG_LEVEL` and `MONGODB_URI` are set. Vercel reports `framework: services`, confirming it accepted the two-service `vercel.json`.
+
+Live URLs/revisions: none yet. Do not mark done until hosted acceptance is verified; if deployment prerequisites are unavailable, record completed local work and the remaining blocker separately.
 
 ## Contract readiness before implementation
 
