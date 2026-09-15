@@ -39,7 +39,17 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.readiness_probe = UnconfiguredProbe()
         yield
         return
-    client = create_mongo_client(str(settings.mongodb_uri), settings.mongo_pool_max_size)
+    try:
+        client = create_mongo_client(str(settings.mongodb_uri), settings.mongo_pool_max_size)
+    except Exception:  # noqa: BLE001 - a dependency must never prevent serving
+        # Constructing the client can fail on its own, for example when an SRV
+        # record cannot be resolved. Readiness reports that; liveness and welcome
+        # must keep working, so startup continues without a client.
+        logger.exception("mongo client construction failed; readiness will report 503")
+        app.state.readiness_probe = UnconfiguredProbe()
+        yield
+        return
+
     app.state.mongo_client = client
     app.state.readiness_probe = MongoReadinessProbe(client, settings.readiness_timeout_seconds)
     try:
@@ -107,4 +117,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     return app
 
 
-app = create_app()
+def _fallback_app(reason: str) -> FastAPI:
+    """Last-resort application used only when assembly itself failed.
+
+    A serverless function that cannot be constructed returns an opaque platform
+    error for every path, including liveness, which makes the failure invisible
+    to health checks and impossible to diagnose from outside. This keeps the two
+    dependency-free routes answering and reports 503 for readiness.
+    """
+    fallback = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+    fallback.state.settings = None
+    fallback.state.config_error = reason
+    fallback.state.readiness_probe = UnconfiguredProbe()
+    register_error_handling(fallback)
+    fallback.include_router(welcome.router)
+    fallback.include_router(health.router)
+    return fallback
+
+
+try:
+    app = create_app()
+except Exception as _exc:  # noqa: BLE001 - import must not raise in a function runtime
+    logging.getLogger(__name__).exception("application assembly failed")
+    app = _fallback_app(type(_exc).__name__)
