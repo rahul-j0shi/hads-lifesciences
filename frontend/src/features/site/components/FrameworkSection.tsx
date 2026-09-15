@@ -16,6 +16,11 @@ export function FrameworkSection(): React.JSX.Element {
         <ul className={styles.frameworkGrid}>
           {FRAMEWORK.cards.map((card) => (
             <li className={styles.card} key={card.letter}>
+              {/* Lockup first, as in the client artwork. This also keeps every card
+                  aligned at the top when a card has no emblem, which the D card does
+                  not because that letterform is a client brand asset. */}
+              <LetterLockup letter={card.letter} title={card.title} />
+              <p className={styles.subline}>{card.subline}</p>
               {card.emblem ? (
                 <div className={styles.emblemPlate}>
                   <img
@@ -30,8 +35,6 @@ export function FrameworkSection(): React.JSX.Element {
                   />
                 </div>
               ) : null}
-              <LetterLockup letter={card.letter} title={card.title} />
-              <p className={styles.subline}>{card.subline}</p>
               <p className={styles.cardBody}>{card.body}</p>
             </li>
           ))}

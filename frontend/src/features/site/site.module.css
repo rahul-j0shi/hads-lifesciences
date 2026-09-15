@@ -138,6 +138,10 @@
   margin: 0 auto;
   padding-inline: var(--gutter);
 }
+/* Art fallback: one centered column at a 640px measure. */
+.heroSolo { max-width: calc(640px + var(--gutter) * 2); }
+.heroSolo .heroHeadline { max-width: none; }
+.heroSolo .heroLead { max-width: none; }
 
 /* ---------- typography ---------- */
 .h2 {
@@ -266,9 +270,9 @@
 
 .emblemPlate {
   aspect-ratio: 1 / 1;
-  max-width: 160px;
+  max-width: 150px;
   width: 100%;
-  margin: 0 auto 4px;
+  margin: 4px auto;
   display: grid;
   place-items: center;
   background: radial-gradient(70% 70% at 50% 40%, #fff 0%, var(--canvas) 100%);
@@ -304,6 +308,14 @@
   text-transform: uppercase;
   color: var(--brand-magenta-text);
   margin: 0;
+}
+
+/* Side by side, card titles wrap to two or three lines and sublines to one or
+   two. Reserving the taller case keeps every emblem on the same baseline
+   instead of leaving them stepped across the row. */
+@media (min-width: 768px) {
+  .lockup { min-height: calc(var(--fs-h3) * 3.45); }
+  .subline { min-height: calc(var(--fs-label) * 2.8); }
 }
 
 /* ---------- framework extras ---------- */

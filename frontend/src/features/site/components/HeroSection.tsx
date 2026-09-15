@@ -10,7 +10,10 @@ export function HeroSection(): React.JSX.Element {
 
   return (
     <section className={styles.hero} id="top" aria-labelledby="hero-heading">
-      <div className={styles.heroInner}>
+      {/* Single centered column: the art fallback in the design concept, used
+          because no approved D emblem exists. Never fill the gap with a
+          substitute illustration. */}
+      <div className={`${styles.heroInner} ${styles.heroSolo}`}>
         <p className={styles.eyebrow}>
           {BRAND.tagline.map((part, i) => (
             <span key={part.text}>
