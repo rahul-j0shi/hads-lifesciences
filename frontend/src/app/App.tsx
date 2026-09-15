@@ -1,5 +1,5 @@
-import { LandingPage } from '../features/landing/LandingPage'
+import { SitePage } from '../features/site/SitePage'
 
 export function App(): React.JSX.Element {
-  return <LandingPage />
+  return <SitePage />
 }

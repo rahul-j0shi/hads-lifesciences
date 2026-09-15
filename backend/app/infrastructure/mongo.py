@@ -7,10 +7,10 @@ unit tests can supply a probe that succeeds, times out or fails without a server
 from __future__ import annotations
 
 import asyncio
-from typing import Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
-from pymongo import AsyncMongoClient
-from pymongo.errors import PyMongoError
+if TYPE_CHECKING:
+    from pymongo import AsyncMongoClient
 
 
 class ReadinessProbe(Protocol):
@@ -28,7 +28,7 @@ class MongoReadinessProbe:
     application lifespan, so probe construction has no side effects.
     """
 
-    def __init__(self, client: AsyncMongoClient, timeout_seconds: float) -> None:
+    def __init__(self, client: "AsyncMongoClient[Any]", timeout_seconds: float) -> None:
         self._client = client
         self._timeout_seconds = timeout_seconds
 
@@ -36,20 +36,25 @@ class MongoReadinessProbe:
         try:
             async with asyncio.timeout(self._timeout_seconds):
                 await self._client.admin.command("ping")
-        except (PyMongoError, asyncio.TimeoutError, OSError):
+        except Exception:  # noqa: BLE001 - any driver failure means "not ready"
             # Callers translate this into a 503. The reason stays in logs, never
             # in the response body, so driver and host details are not disclosed.
             return False
         return True
 
 
-def create_mongo_client(uri: str, pool_max_size: int) -> AsyncMongoClient:
+def create_mongo_client(uri: str, pool_max_size: int) -> "AsyncMongoClient[Any]":
     """Build a client with bounded pooling and timeouts.
 
     The API runs as a serverless function, so many short-lived instances can exist
     at once against a shared Atlas connection ceiling. The pool maximum stays small
     for that reason; see the hosting decision record.
     """
+    # Imported here, not at module scope. The driver is only needed for readiness,
+    # and a driver import problem must not stop the process from serving liveness
+    # and welcome, which is what a top-level import failure would cause.
+    from pymongo import AsyncMongoClient
+
     return AsyncMongoClient(
         uri,
         maxPoolSize=pool_max_size,

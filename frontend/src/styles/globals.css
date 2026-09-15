@@ -1,44 +1,103 @@
-/* Brand tokens measured from the client artwork. See idea/design_concept.md
-   section 7.1, which is the authoritative source and is not published in this
-   repository. */
+/* Design tokens. Values measured from the client artwork and verified against
+   WCAG contrast requirements; see idea/design_concept.md sections 7.1 and 7.2,
+   which is the authoritative source and is not published in this repository. */
 :root {
-  --brand-navy: #13306b;
+  /* brand */
   --brand-magenta: #bd2470;
   --brand-magenta-text: #a31e5c;
-  --canvas: #f1f4f7;
-  --surface: #ffffff;
+  --brand-magenta-deep: #8c1a50;
+  --brand-navy: #13306b;
+  --brand-navy-deep: #0f2551;
+  /* client-supplied, mission phrase only, white ground only */
+  --mission-magenta: #d81b60;
+  --mission-blue: #0d47a1;
+
+  /* text */
   --ink: #2a3342;
   --ink-muted: #55606f;
+  --ink-inverse: #ffffff;
+  --ink-inverse-muted: #c8d2de;
+
+  /* surfaces */
+  --surface: #ffffff;
+  --canvas: #f1f4f7;
+  --tint: #e6ecf2;
+  --wash: radial-gradient(120% 90% at 12% 0%, #ffffff 0%, #f1f4f7 62%);
+
+  /* lines, elevation, state */
   --line-decorative: #dde3ea;
+  --line-functional: #7f8da1;
+  --line-brand: #bd2470;
+  --shadow-card: 0 1px 2px rgba(19, 48, 107, 0.06), 0 10px 28px rgba(19, 48, 107, 0.07);
+  --focus-inner: #ffffff;
   --focus-outer: #13306b;
+
+  /* radius and motion */
+  --radius-card: 18px;
+  --radius-inset: 12px;
+  --radius-control: 10px;
+  --radius-band: 14px;
+  --motion-fast: 140ms;
+  --motion-ease: cubic-bezier(0.2, 0.6, 0.3, 1);
+
+  /* type. Every clamp keeps a rem term so text still responds to the user's
+     font size at 200 percent zoom. */
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fs-display: clamp(2.25rem, 1.4rem + 3.6vw, 3.75rem);
+  --fs-h2: clamp(1.75rem, 1.25rem + 2.1vw, 2.5rem);
+  --fs-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.5rem);
+  --fs-lead: clamp(1.125rem, 1rem + 0.53vw, 1.375rem);
+  --fs-body: clamp(1rem, 0.97rem + 0.13vw, 1.0625rem);
+  --fs-label: 0.75rem;
+
+  /* spacing */
+  --gutter: 16px;
+  --section-pad: 56px;
+  --card-pad: 24px;
+}
+
+@media (min-width: 768px) {
+  :root { --gutter: 24px; --section-pad: 72px; --card-pad: 28px; }
+}
+@media (min-width: 1200px) {
+  :root { --gutter: 32px; --section-pad: 96px; --card-pad: 32px; }
 }
 
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  background: radial-gradient(120% 90% at 12% 0%, #ffffff 0%, var(--canvas) 62%);
-  color: var(--ink);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: clamp(1rem, 0.97rem + 0.13vw, 1.0625rem);
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-:where(a, button):focus-visible {
-  outline: 2px solid var(--focus-outer);
-  outline-offset: 2px;
-}
-
+html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; }
+
+/* Offset anchored headings below the sticky header. */
+:where(section[id]) { scroll-margin-top: 80px; }
+@media (min-width: 1024px) { :where(section[id]) { scroll-margin-top: 96px; } }
+
+/* Two-ring focus. The white inner ring is load-bearing: a navy ring directly on
+   the magenta button measures 2.2:1, below the 3:1 non-text minimum. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-outer);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--focus-inner);
+}
+main:focus { outline: none; }
