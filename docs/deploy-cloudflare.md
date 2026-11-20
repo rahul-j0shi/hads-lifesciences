@@ -6,31 +6,29 @@ This is a one-time setup, written for someone who has never used Cloudflare or G
 
 **Why "Workers" and not "Pages":** Cloudflare now recommends Workers for new sites. For a static site it behaves the same as Pages (free, global, automatic HTTPS) and it is where new features land.
 
-**The order matters.** Parts 1 to 3 happen in Cloudflare and GitHub. Part 4 is the only GoDaddy step. Part 5 is two short clicks back in Cloudflare, which can only happen after GoDaddy hands the domain over.
+**The order matters.** Parts 1 to 3 happen in Cloudflare. Part 4 is the only GoDaddy step. Part 5 is two short clicks back in Cloudflare, which can only happen after GoDaddy hands the domain over.
 
 ---
 
-## Part 1. How deploys work (already set up)
+## Part 1. How deploys work
 
-The Worker `hads-web` exists in Cloudflare and is live at **https://hads-web.joshirahul0925.workers.dev**.
+The Worker `hads-web` is live at **https://hads-web.joshirahul0925.workers.dev**.
 
-Every push to `main` runs the GitHub Actions workflow `.github/workflows/deploy.yml`. It installs, builds and publishes the site with `wrangler deploy`. Each run and its full log is on GitHub under **Actions → Deploy**, and **Run workflow** there redeploys on demand.
+Cloudflare's own Git integration (Workers Builds) watches `rahul-j0shi/hads-lifesciences`. Every push to `main` makes Cloudflare pull the code and run `npx wrangler deploy` at the top of the repository, which installs, builds and publishes the site. There is no GitHub Actions workflow and no token stored in GitHub.
 
-Cloudflare's own Git integration (Workers Builds) is **not** used. If `hads-web` shows a connected repository under **Settings → Build**, disconnect it, so pushes are not built twice.
+## Part 2. Build settings (one time)
 
-## Part 2. Give GitHub permission to deploy (one time)
+In Cloudflare open **Workers & Pages → hads-web → Settings → Build**:
 
-The workflow needs one secret: a Cloudflare API token that may only deploy Workers.
+| Setting | Value |
+| --- | --- |
+| Git repository | `rahul-j0shi/hads-lifesciences` |
+| Branch (production) | `main` |
+| Build command | empty |
+| Deploy command | `npx wrangler deploy` |
+| Root directory / path | empty or `/` |
 
-1. In Cloudflare, click the **person icon (top right) → My Profile → API Tokens → Create Token**.
-2. Next to the template **Edit Cloudflare Workers**, click **Use template**.
-3. **Account Resources:** Include, your account. **Zone Resources:** Include, All zones (or just `hads.life`).
-4. **Continue to summary → Create Token**, and copy the token. It is shown only once.
-5. On GitHub open **github.com/rahul-j0shi/hads-lifesciences → Settings → Secrets and variables → Actions → New repository secret**.
-6. **Name:** `CLOUDFLARE_API_TOKEN_HADS`. **Secret:** paste the token. Click **Add secret**.
-7. Open the **Actions** tab, choose **Deploy**, and click **Run workflow** (branch `main`). It should finish green in about a minute.
-
-The account ID is in `wrangler.jsonc`. It identifies the account but grants no access, so it is not a secret.
+Builds and their logs are listed under **hads-web → Deployments** (or a **Builds** tab).
 
 ## Part 3. Add hads.life to Cloudflare
 
@@ -71,15 +69,15 @@ Wait a few minutes for the certificate, then open **https://hads.life** and **ht
 ## Day to day
 
 - **Change the site:** edit, run `./run.sh` to check locally, commit, push to `main`. Live in about a minute.
-- **See deploys:** GitHub → **Actions → Deploy**. **Roll back:** Cloudflare → Workers & Pages → hads-web → **Deployments**; any earlier version can be restored with one click.
+- **See deploys:** Cloudflare → Workers & Pages → hads-web → **Deployments**. **Roll back:** Cloudflare → Workers & Pages → hads-web → **Deployments**; any earlier version can be restored with one click.
 - **Deploy from your laptop instead of GitHub (optional):** run `./run.sh --login` once, then `./run.sh --deploy`.
 
 ## If something goes wrong
 
 | Symptom | Fix |
 | --- | --- |
-| Deploy run fails with "Authentication error" or code 10000 | The `CLOUDFLARE_API_TOKEN_HADS` secret is missing, expired or lacks Workers permissions. Create a new token (Part 2) and replace the secret. |
-| Deploy run fails at "Install" or "Build and deploy" | Run `./run.sh --rebuild` locally: whatever fails there fails on GitHub too. |
+| A push to `main` does not deploy | Check **hads-web → Settings → Build**: the repository and branch must match Part 2. On GitHub, **Settings → Applications → Cloudflare Workers and Pages → Configure** must include `hads-lifesciences`. |
+| A build fails | Open its log in Cloudflare. Then run `./run.sh --rebuild` locally: whatever fails there fails in Cloudflare too. |
 | "Hostname already has externally managed DNS records" when adding the custom domain | In **DNS → Records**, delete the old A/AAAA/CNAME record for that name, then add the custom domain again. |
 | Domain stuck on "Pending" for more than a day | In GoDaddy, confirm the nameservers are exactly the two Cloudflare ones and that DNSSEC is off. |
 | Page loads but looks unstyled or stale | Hard refresh (Ctrl+Shift+R). HTML is never cached for long, so a new deploy shows up immediately. |

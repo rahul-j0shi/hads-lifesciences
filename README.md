@@ -14,7 +14,7 @@ Needs Node.js 22.23 or newer.
 ./run.sh --deploy    # build and publish to Cloudflare from this computer (run ./run.sh --login once first)
 ```
 
-Day to day you do not need `--deploy`: pushing to `main` deploys automatically through GitHub Actions. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the one-time Cloudflare and GoDaddy setup.
+Day to day you do not need `--deploy`: pushing to `main` deploys automatically through Cloudflare's Git integration. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the one-time Cloudflare and GoDaddy setup.
 
 ## Layout
 
