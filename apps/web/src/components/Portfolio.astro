@@ -47,7 +47,7 @@ import { PORTFOLIO } from '../content'
     gap: 1.25rem;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   }
-  .area { display: flex; flex-direction: column; padding: 1.5rem; }
+  .area { display: flex; flex-direction: column; padding: clamp(1.25rem, 1rem + 1vw, 1.5rem); }
 
   .top { display: flex; align-items: center; gap: 0.7rem; }
   .step {
@@ -67,7 +67,7 @@ import { PORTFOLIO } from '../content'
     border-radius: 999px;
     background: var(--tint);
     color: var(--navy);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -84,9 +84,9 @@ import { PORTFOLIO } from '../content'
   dl { display: flex; flex-direction: column; flex: 1; gap: 1rem; margin-top: 1rem; }
   dt {
     color: var(--muted);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
   dd { margin: 0.2rem 0 0; font-size: 0.95rem; color: var(--ink); }

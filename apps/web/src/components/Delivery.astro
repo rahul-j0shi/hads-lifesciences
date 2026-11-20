@@ -43,7 +43,9 @@ import { DELIVERY } from '../content'
     padding: 1.6rem;
     transition: border-color 200ms ease, box-shadow 200ms ease;
   }
-  .system:hover { border-color: rgb(34 83 171 / 0.35); box-shadow: var(--shadow); }
+  @media (hover: hover) {
+    .system:hover { border-color: rgb(34 83 171 / 0.35); box-shadow: var(--shadow); }
+  }
   .icon {
     display: grid;
     place-items: center;
@@ -53,7 +55,12 @@ import { DELIVERY } from '../content'
     background: linear-gradient(145deg, var(--blue-soft), var(--pink-soft));
   }
   .icon img { width: 3.25rem; height: 3.25rem; }
-  .index { color: var(--pink-ink); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; }
+  .index { color: var(--pink-ink); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.14em; }
+  @media (max-width: 519px) {
+    .system { padding: 1.35rem; gap: 1rem; }
+    .icon { width: 3.75rem; height: 3.75rem; border-radius: 1rem; }
+    .icon img { width: 2.75rem; height: 2.75rem; }
+  }
   h3 {
     margin-top: 0.2rem;
     font: 600 var(--fs-h3)/1.3 var(--font-display);

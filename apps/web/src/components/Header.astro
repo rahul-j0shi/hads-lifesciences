@@ -1,5 +1,5 @@
 ---
-import { NAV, SITE } from '../content'
+import { CONTACT_DETAILS, NAV, SITE } from '../content'
 import Icon from './Icon.astro'
 ---
 
@@ -35,6 +35,10 @@ import Icon from './Icon.astro'
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
+    <div class="quick">
+      <a class="btn btn--primary" href={CONTACT_DETAILS.phoneHref}><Icon name="phone" size={18} /> Call</a>
+      <a class="btn btn--ghost" href={`mailto:${CONTACT_DETAILS.email}`}><Icon name="mail" size={18} /> Email</a>
+    </div>
   </div>
 </header>
 
@@ -64,7 +68,7 @@ import Icon from './Icon.astro'
     justify-content: space-between;
     gap: 1.5rem;
   }
-  .brand img { height: 52px; width: auto; }
+  .brand img { height: 46px; width: auto; }
 
   .nav { display: none; align-items: center; gap: 1.75rem; }
   .nav ul { display: flex; gap: 1.6rem; margin: 0; }
@@ -115,9 +119,9 @@ import Icon from './Icon.astro'
   }
   .sheet::backdrop { background: rgb(17 29 69 / 0.35); }
   .sheet-top { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; }
-  .sheet-top img { height: 52px; width: auto; }
+  .sheet-top img { height: 46px; width: auto; }
   .sheet ul { display: grid; margin: 0.5rem 0 0; }
-  .sheet a {
+  .sheet nav a {
     display: block;
     padding: 0.95rem 0;
     border-bottom: 1px solid var(--line);
@@ -125,9 +129,13 @@ import Icon from './Icon.astro'
     font: 600 1.3rem/1.2 var(--font-display);
     text-decoration: none;
   }
+  .sheet { max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
+  .quick { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.5rem; }
+  .quick .btn { min-height: 3rem; }
 
   @media (min-width: 1040px) {
     .nav { display: flex; }
     .menu-button { display: none; }
+    .brand img { height: 52px; }
   }
 </style>

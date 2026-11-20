@@ -5,6 +5,7 @@ import Icon from './Icon.astro'
 const { email, phoneDisplay, phoneHref, address } = CONTACT_DETAILS
 const addressLine = `${address.locality}, ${address.city} ${address.postalCode}, ${address.country}`
 const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLine)}`
+const [emailUser, emailDomain] = email.split('@')
 ---
 
 <section class="contact" id="contact" aria-labelledby="contact-heading">
@@ -24,32 +25,36 @@ const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURICom
       </ul>
     </div>
 
+    <!-- Each row is one link, so the whole row is the tap target on a phone. -->
     <ul class="methods" role="list">
       <li>
-        <span class="icon"><Icon name="mail" /></span>
-        <div>
-          <p class="label">Email</p>
-          <a href={`mailto:${email}`}>{email}</a>
-        </div>
+        <a href={`mailto:${email}`}>
+          <span class="icon"><Icon name="mail" /></span>
+          <span class="text">
+            <span class="label">Email</span>
+            <span class="value">{emailUser}@<wbr />{emailDomain}</span>
+          </span>
+        </a>
       </li>
       <li>
-        <span class="icon"><Icon name="phone" /></span>
-        <div>
-          <p class="label">Phone</p>
-          <a href={phoneHref}>{phoneDisplay}</a>
-        </div>
+        <a href={phoneHref}>
+          <span class="icon"><Icon name="phone" /></span>
+          <span class="text">
+            <span class="label">Phone</span>
+            <span class="value">{phoneDisplay}</span>
+          </span>
+        </a>
       </li>
       <li>
-        <span class="icon"><Icon name="pin" /></span>
-        <div>
-          <p class="label">Address</p>
-          <address>
-            <a href={mapsHref} target="_blank" rel="noopener">
-              {address.locality},<br />
-              {address.city} {address.postalCode}, {address.country}
-            </a>
-          </address>
-        </div>
+        <a href={mapsHref} target="_blank" rel="noopener">
+          <span class="icon"><Icon name="pin" /></span>
+          <span class="text">
+            <span class="label">Address</span>
+            <address class="value">
+              {address.locality}, {address.city} {address.postalCode}, {address.country}
+            </address>
+          </span>
+        </a>
       </li>
     </ul>
   </div>
@@ -67,6 +72,7 @@ const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURICom
       var(--navy-deep);
   }
   .grid { display: grid; gap: 3rem; align-items: center; }
+  .grid > * { min-width: 0; }
   .intro { display: grid; gap: 1rem; justify-items: start; }
   .eyebrow { color: #ff9ccc; }
   .h2 { color: #fff; }
@@ -74,36 +80,43 @@ const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURICom
 
   .topics { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.75rem; }
   .topics a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
     padding: 0.55rem 1.1rem;
     border: 1px solid rgb(255 255 255 / 0.35);
     border-radius: 999px;
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 600;
     text-decoration: none;
     transition: background-color 160ms ease, border-color 160ms ease;
   }
-  .topics a:hover { background: rgb(255 255 255 / 0.12); border-color: #fff; }
+  .topics a:hover,
+  .topics a:active { background: rgb(255 255 255 / 0.12); border-color: #fff; }
 
   .methods {
     display: grid;
-    gap: 0.25rem;
     padding: 0.5rem;
     border-radius: var(--radius);
     background: var(--surface);
     color: var(--ink);
     box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.5);
   }
-  .methods li {
+  .methods li + li { border-top: 1px solid var(--line); }
+  .methods a {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
     align-items: center;
     padding: 1rem 0.75rem;
     border-radius: var(--radius-sm);
+    color: var(--navy);
+    text-decoration: none;
+    transition: background-color 160ms ease;
   }
-  .methods li + li { border-top: 1px solid var(--line); }
+  .methods a:hover,
+  .methods a:active { background: var(--canvas); }
   .icon {
     display: grid;
     place-items: center;
@@ -114,22 +127,20 @@ const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURICom
     color: var(--pink-ink);
   }
   .methods li:nth-child(2) .icon { background: var(--blue-soft); color: var(--blue); }
+  .text { display: grid; gap: 0.1rem; }
   .label {
     color: var(--muted);
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
-  .methods a {
-    color: var(--navy);
-    font-size: clamp(0.95rem, 0.88rem + 0.3vw, 1.05rem);
+  .value {
+    font-size: clamp(0.98rem, 0.92rem + 0.3vw, 1.05rem);
+    font-style: normal;
     font-weight: 650;
-    text-decoration: none;
     overflow-wrap: break-word;
   }
-  .methods a:hover { color: var(--pink-ink); text-decoration: underline; text-underline-offset: 3px; }
-  address { font-style: normal; }
 
   @media (min-width: 960px) {
     .grid { grid-template-columns: 1fr 1fr; gap: 5rem; }
