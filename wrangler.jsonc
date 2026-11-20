@@ -1,0 +1,18 @@
+// Cloudflare Worker that serves the website as static files. It lives at the
+// repository root so Cloudflare's default settings work with no "root
+// directory": `npx wrangler deploy` runs the build below, then uploads
+// apps/web/dist. Custom domains are attached in the Cloudflare dashboard.
+{
+  "$schema": "./apps/web/node_modules/wrangler/config-schema.json",
+  "name": "hads-web",
+  "compatibility_date": "2026-11-01",
+  "build": {
+    "command": "npm install --no-audit --no-fund && npm run build",
+    "cwd": "apps/web",
+    "watch_dir": "apps/web/src"
+  },
+  "assets": {
+    "directory": "./apps/web/dist",
+    "not_found_handling": "404-page"
+  }
+}

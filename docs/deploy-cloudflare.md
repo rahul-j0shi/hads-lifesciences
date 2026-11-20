@@ -27,18 +27,18 @@ git push origin main
 2. In the left sidebar choose **Compute (Workers) → Workers & Pages** (on some accounts it is just **Workers & Pages**).
 3. Click **Create application**, then **Import a repository** (or **Connect to Git**). Choose **GitHub**.
 4. A GitHub window opens asking you to install the **Cloudflare Workers and Pages** app. Choose **Only select repositories**, pick `hads-lifesciences`, and click **Install & Authorize**.
-5. Back in Cloudflare, select the `hads-lifesciences` repository. Fill in the settings exactly like this:
+5. Back in Cloudflare, select the `hads-lifesciences` repository. A settings form appears. Cloudflare's form changes over time, so go by these rules rather than by its exact layout:
 
-   | Field | Value |
-   | --- | --- |
-   | Project name | `hads-web` (must match `name` in `apps/web/wrangler.jsonc`) |
-   | Build command | `npm run build` |
-   | Deploy command | `npx wrangler deploy` (usually prefilled) |
-   | Path / Root directory (under *Advanced settings*) | `apps/web` |
+   - **Project name** (or Worker name): type `hads-web`. It must match `name` in the repository's `wrangler.jsonc`.
+   - **Build command**: leave it **empty**. If it has something in it, delete it.
+   - **Deploy command**: `npx wrangler deploy`. It is normally filled in already.
+   - **Every other field** (root directory, path, environment variables, and so on): leave as it is, whether or not you see it.
 
-   Leave everything else as it is. No environment variables are needed.
-6. Click **Deploy**. The first build takes 1 to 2 minutes; you can watch its log.
+   The repository is set up so that `npx wrangler deploy`, run from the top of the repository, installs everything, builds the site and publishes it. That is why no other setting is needed.
+6. Click **Deploy** (or **Save and Deploy**). The first build takes 1 to 2 minutes; you can watch its log.
 7. When it finishes, Cloudflare shows a link like `https://hads-web.<your-name>.workers.dev`. Open it: that is your live site, before the domain is attached.
+
+If you already created the project with other settings: open **Workers & Pages → hads-web → Settings → Build**, make the build command empty and the deploy command `npx wrangler deploy`, save, then push any commit (or use **Retry build** on the latest deployment).
 
 From now on, every push to `main` redeploys automatically. Pushes to other branches get their own preview link, so you can check a change before merging it.
 
@@ -82,14 +82,15 @@ Wait a few minutes for the certificate, then open **https://hads.life** and **ht
 
 - **Change the site:** edit, run `./run.sh` to check locally, commit, push to `main`. Live in about a minute.
 - **See deploys or roll back:** Workers & Pages → hads-web → **Deployments**. Any earlier version can be restored with one click.
-- **Deploy from your laptop instead of GitHub (optional):** run `npx wrangler login` once inside `apps/web`, then `./run.sh --deploy`.
+- **Deploy from your laptop instead of GitHub (optional):** run `./run.sh --login` once, then `./run.sh --deploy`.
 
 ## If something goes wrong
 
 | Symptom | Fix |
 | --- | --- |
-| Build fails with "name mismatch" | The Cloudflare project name must be `hads-web`, the same as in `apps/web/wrangler.jsonc`. |
-| Build fails at `npm run build` | Check that **Root directory** is `apps/web`. Then run `./run.sh --rebuild` locally: whatever fails there fails in Cloudflare too. |
+| Build fails with "name mismatch" | The Cloudflare project name must be `hads-web`, the same as in `wrangler.jsonc` at the top of the repository. |
+| Build fails with `Missing script: "build"` | The build command field is not empty. Clear it; the deploy command does the build. |
+| Any other build failure | Run `./run.sh --rebuild` locally: whatever fails there fails in Cloudflare too. |
 | "Hostname already has externally managed DNS records" when adding the custom domain | In **DNS → Records**, delete the old A/AAAA/CNAME record for that name, then add the custom domain again. |
 | Domain stuck on "Pending" for more than a day | In GoDaddy, confirm the nameservers are exactly the two Cloudflare ones and that DNSSEC is off. |
 | Page loads but looks unstyled or stale | Hard refresh (Ctrl+Shift+R). HTML is never cached for long, so a new deploy shows up immediately. |

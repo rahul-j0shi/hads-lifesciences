@@ -11,7 +11,7 @@ Needs Node.js 22.23 or newer.
 ```bash
 ./run.sh             # dev server with live reload: http://localhost:4321
 ./run.sh --rebuild   # clean install + production build, served as Cloudflare will: http://localhost:8787
-./run.sh --deploy    # build and publish to Cloudflare (run `npx wrangler login` once first)
+./run.sh --deploy    # build and publish to Cloudflare from this computer (run ./run.sh --login once first)
 ```
 
 Day to day you do not need `--deploy`: pushing to `main` on GitHub deploys automatically. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the one-time Cloudflare and GoDaddy setup.
@@ -25,13 +25,13 @@ apps/
     src/components/       one file per page section
     src/styles/global.css brand tokens (colors, type, spacing)
     public/               served as-is: logo, images, icons, security headers
-    wrangler.jsonc        Cloudflare config
 docs/
   deploy-cloudflare.md    step-by-step hosting guide
   brand/                  master logo file from the client (CorelDRAW PDF)
   principles/             engineering principles kept for a future backend
 idea/                     local only, not in git: client brief, design concept, reference artwork
 run.sh
+wrangler.jsonc            Cloudflare config: builds apps/web and serves apps/web/dist
 ```
 
 New apps (for example a future API) go in `apps/<name>` with their own `package.json`.
