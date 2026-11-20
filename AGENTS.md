@@ -7,3 +7,4 @@
 - Keep the page fast: no client-side framework, no new runtime dependencies without a measured reason.
 - No em dashes in authored text.
 - Engineering principles for a future backend live in `docs/principles/`.
+- Commits and pull requests are authored by the repository owner. Never add `Co-Authored-By`, "Generated with", or any other AI or agent attribution to commit messages, PR titles or PR descriptions.

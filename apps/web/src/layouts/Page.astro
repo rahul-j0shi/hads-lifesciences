@@ -13,7 +13,8 @@ interface Props {
 
 const { title = SITE.title, description = SITE.description, index = true } = Astro.props
 const canonical = new URL(Astro.url.pathname, SITE.url).href
-const ogImage = new URL('/og.jpg', SITE.url).href
+// Bump ?v= whenever og.jpg changes: WhatsApp, LinkedIn and others cache previews by URL.
+const ogImage = new URL('/og.jpg?v=2', SITE.url).href
 
 const organization = {
   '@context': 'https://schema.org',
@@ -54,10 +55,17 @@ const organization = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_IN" />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.name} logo: ${SITE.tagline.join(', ')}`} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(organization)} />
   </head>
