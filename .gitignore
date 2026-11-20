@@ -12,3 +12,6 @@ dist/
 
 # Screenshots and scratch files dropped in the repo root
 /*.png
+
+# Local credentials. Never commit.
+*.creds.json
