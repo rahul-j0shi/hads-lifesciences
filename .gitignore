@@ -9,3 +9,6 @@ dist/
 .env.*
 .dev.vars
 .DS_Store
+
+# Screenshots and scratch files dropped in the repo root
+/*.png
