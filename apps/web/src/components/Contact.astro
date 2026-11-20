@@ -1,0 +1,137 @@
+---
+import { CONTACT, CONTACT_DETAILS } from '../content'
+import Icon from './Icon.astro'
+
+const { email, phoneDisplay, phoneHref, address } = CONTACT_DETAILS
+const addressLine = `${address.locality}, ${address.city} ${address.postalCode}, ${address.country}`
+const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLine)}`
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-heading">
+  <div class="container grid">
+    <div class="intro">
+      <p class="eyebrow">{CONTACT.eyebrow}</p>
+      <h2 class="h2" id="contact-heading">{CONTACT.heading}</h2>
+      <p class="lead">{CONTACT.lead}</p>
+      <ul class="topics" role="list" aria-label="Start an email about">
+        {
+          CONTACT.inquiries.map((topic) => (
+            <li>
+              <a href={`mailto:${email}?subject=${encodeURIComponent(topic.subject)}`}>{topic.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <ul class="methods" role="list">
+      <li>
+        <span class="icon"><Icon name="mail" /></span>
+        <div>
+          <p class="label">Email</p>
+          <a href={`mailto:${email}`}>{email}</a>
+        </div>
+      </li>
+      <li>
+        <span class="icon"><Icon name="phone" /></span>
+        <div>
+          <p class="label">Phone</p>
+          <a href={phoneHref}>{phoneDisplay}</a>
+        </div>
+      </li>
+      <li>
+        <span class="icon"><Icon name="pin" /></span>
+        <div>
+          <p class="label">Address</p>
+          <address>
+            <a href={mapsHref} target="_blank" rel="noopener">
+              {address.locality},<br />
+              {address.city} {address.postalCode}, {address.country}
+            </a>
+          </address>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--section);
+    color: #fff;
+    background:
+      radial-gradient(40rem 30rem at 100% 0%, rgb(229 33 137 / 0.28), transparent 65%),
+      radial-gradient(40rem 30rem at 0% 100%, rgb(34 83 171 / 0.55), transparent 70%),
+      var(--navy-deep);
+  }
+  .grid { display: grid; gap: 3rem; align-items: center; }
+  .intro { display: grid; gap: 1rem; justify-items: start; }
+  .eyebrow { color: #ff9ccc; }
+  .h2 { color: #fff; }
+  .lead { color: #d3dbef; max-width: 32rem; }
+
+  .topics { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.75rem; }
+  .topics a {
+    display: inline-block;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid rgb(255 255 255 / 0.35);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 160ms ease, border-color 160ms ease;
+  }
+  .topics a:hover { background: rgb(255 255 255 / 0.12); border-color: #fff; }
+
+  .methods {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.5);
+  }
+  .methods li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0.75rem;
+    border-radius: var(--radius-sm);
+  }
+  .methods li + li { border-top: 1px solid var(--line); }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.85rem;
+    background: var(--pink-soft);
+    color: var(--pink-ink);
+  }
+  .methods li:nth-child(2) .icon { background: var(--blue-soft); color: var(--blue); }
+  .label {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .methods a {
+    color: var(--navy);
+    font-size: clamp(0.95rem, 0.88rem + 0.3vw, 1.05rem);
+    font-weight: 650;
+    text-decoration: none;
+    overflow-wrap: break-word;
+  }
+  .methods a:hover { color: var(--pink-ink); text-decoration: underline; text-underline-offset: 3px; }
+  address { font-style: normal; }
+
+  @media (min-width: 960px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 5rem; }
+  }
+</style>

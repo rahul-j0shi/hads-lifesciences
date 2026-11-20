@@ -1,0 +1,101 @@
+---
+import { PORTFOLIO } from '../content'
+---
+
+<section class="section section--canvas" id="portfolio" aria-labelledby="portfolio-heading">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">{PORTFOLIO.eyebrow}</p>
+      <h2 class="h2" id="portfolio-heading">{PORTFOLIO.heading}</h2>
+      <p class="lead">{PORTFOLIO.intro}</p>
+    </div>
+
+    <!-- Ordered head to toe; the step marker carries that order visually. -->
+    <ol class="areas" role="list">
+      {
+        PORTFOLIO.areas.map((area, i) => (
+          <li class="card area">
+            <div class="top">
+              <span class="step" aria-hidden="true">{i + 1}</span>
+              <span class="region">{area.region}</span>
+            </div>
+            <h3>{area.focus}</h3>
+            <dl>
+              <div>
+                <dt>{PORTFOLIO.labels.archetype}</dt>
+                <dd>{area.archetype}</dd>
+              </div>
+              <div>
+                <dt>{PORTFOLIO.labels.target}</dt>
+                <dd>{area.target}</dd>
+              </div>
+              <div class="delivery">
+                <dt>{PORTFOLIO.labels.architecture}</dt>
+                <dd>{area.architecture}</dd>
+              </div>
+            </dl>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .areas {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+  .area { display: flex; flex-direction: column; padding: 1.5rem; }
+
+  .top { display: flex; align-items: center; gap: 0.7rem; }
+  .step {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .area:nth-child(even) .step { background: var(--pink-ink); }
+  .region {
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--tint);
+    color: var(--navy);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin-top: 1.1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+    font: 600 1.3rem/1.25 var(--font-display);
+    color: var(--navy);
+  }
+
+  dl { display: flex; flex-direction: column; flex: 1; gap: 1rem; margin-top: 1rem; }
+  dt {
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  dd { margin: 0.2rem 0 0; font-size: 0.95rem; color: var(--ink); }
+  .delivery {
+    margin-top: auto;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--blue-soft);
+  }
+  .delivery dt { color: var(--blue); }
+  .delivery dd { color: var(--navy); font-weight: 650; }
+</style>

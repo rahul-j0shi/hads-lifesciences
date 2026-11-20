@@ -1,0 +1,164 @@
+---
+import { HERO, SITE } from '../content'
+import Icon from './Icon.astro'
+---
+
+<section class="hero" id="top" aria-labelledby="hero-heading">
+  <div class="container grid">
+    <div class="copy">
+      <p class="tagline">
+        {SITE.tagline.map((word, i) => <span class={i === 1 ? 'blue' : 'pink'}>{word}</span>)}
+      </p>
+
+      <h1 id="hero-heading">
+        {HERO.headline} <span class="accent">{HERO.headlineAccent}</span>
+      </h1>
+
+      <p class="lead">{HERO.lead}</p>
+
+      <p class="mission">
+        <span class="pink">{HERO.mission[0]}</span> <span class="blue">{HERO.mission[1]}</span>
+      </p>
+
+      <div class="actions">
+        <a class="btn btn--primary" href={HERO.primary.href}>
+          {HERO.primary.label}
+          <Icon name="arrowRight" size={18} />
+        </a>
+        <a class="btn btn--ghost" href={HERO.secondary.href}>{HERO.secondary.label}</a>
+      </div>
+    </div>
+
+    <!-- Individual well-being at the centre, the other three pillars around it.
+         Pure decoration: the framework section carries the actual content. -->
+    <div class="art" aria-hidden="true">
+      <div class="ring ring--outer"></div>
+      <div class="ring ring--inner"></div>
+      <div class="disc">
+        <img src="/brand/letter-d.svg" alt="" width="112" height="110" fetchpriority="high" />
+      </div>
+      <span class="satellite s-h"><img src="/brand/letter-h.svg" alt="" width="100" height="110" /></span>
+      <span class="satellite s-a"><img src="/brand/letter-a.svg" alt="" width="124" height="111" /></span>
+      <span class="satellite s-s"><img src="/brand/letter-s.svg" alt="" width="82" height="116" /></span>
+      <span class="dot d1"></span>
+      <span class="dot d2"></span>
+      <span class="dot d3"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(4rem, 3rem + 5vw, 7.5rem);
+    background:
+      radial-gradient(42rem 32rem at 85% 30%, rgb(229 33 137 / 0.1), transparent 70%),
+      radial-gradient(36rem 28rem at 5% 95%, rgb(34 83 171 / 0.09), transparent 70%),
+      url('/images/constellation.svg') center / cover no-repeat,
+      var(--canvas);
+  }
+  .grid {
+    display: grid;
+    gap: clamp(2.5rem, 1rem + 5vw, 4rem);
+    align-items: center;
+  }
+
+  .tagline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .tagline span + span::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 0.9rem;
+    border-radius: 50%;
+    vertical-align: middle;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .pink { color: var(--pink-ink); }
+  .blue { color: var(--blue); }
+
+  h1 {
+    margin-top: 1.25rem;
+    font: 600 var(--fs-display)/1.06 var(--font-display);
+    color: var(--navy);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .accent { color: var(--pink); }
+
+  .lead { margin-top: 1.4rem; max-width: 34rem; }
+
+  .mission {
+    display: inline-block;
+    margin-top: 1.6rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--line);
+    font-weight: 700;
+    font-size: 1.02rem;
+  }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2.2rem; }
+
+  .art {
+    position: relative;
+    width: min(84%, 30rem);
+    aspect-ratio: 1;
+    margin-inline: auto;
+  }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px dashed rgb(34 83 171 / 0.22);
+  }
+  .ring--outer { inset: 0; }
+  .ring--inner { inset: 15%; border-style: solid; border-color: rgb(229 33 137 / 0.16); }
+  .disc {
+    position: absolute;
+    inset: 24%;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #fff 55%, var(--tint) 100%);
+    box-shadow: 0 30px 60px -24px rgb(25 43 98 / 0.35), inset 0 0 0 1px rgb(255 255 255 / 0.9);
+  }
+  .disc img { width: 58%; }
+
+  .satellite {
+    position: absolute;
+    width: 20%;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    translate: -50% -50%;
+  }
+  .satellite img { width: 58%; height: 58%; object-fit: contain; }
+  /* Positions sit on the outer ring: centre (50%, 50%), radius 50%. */
+  .s-h { left: 7%; top: 25%; }
+  .s-a { left: 93%; top: 25%; }
+  .s-s { left: 50%; top: 100%; }
+
+  .dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; translate: -50% -50%; }
+  .d1 { left: 50%; top: 0; background: var(--pink); }
+  .d2 { left: 15%; top: 85%; background: var(--blue); width: 7px; height: 7px; }
+  .d3 { left: 85%; top: 85%; background: var(--pink); width: 7px; height: 7px; }
+
+  @media (min-width: 960px) {
+    .grid { grid-template-columns: 1.15fr 1fr; }
+  }
+</style>

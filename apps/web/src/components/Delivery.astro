@@ -1,0 +1,75 @@
+---
+import { DELIVERY } from '../content'
+---
+
+<section class="section" id="delivery-systems" aria-labelledby="delivery-heading">
+  <div class="container">
+    <div class="head">
+      <div class="section-head">
+        <p class="eyebrow">{DELIVERY.eyebrow}</p>
+        <h2 class="h2" id="delivery-heading">{DELIVERY.heading}</h2>
+      </div>
+      <p class="lead">{DELIVERY.intro}</p>
+    </div>
+
+    <ol class="systems" role="list">
+      {
+        DELIVERY.systems.map((system, i) => (
+          <li class="card system">
+            <div class="icon">
+              <img src={system.icon} alt="" width="64" height="64" loading="lazy" />
+            </div>
+            <div>
+              <p class="index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+              <h3>{system.title}</h3>
+              <p class="body">{system.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .head { display: grid; gap: 0 3rem; align-items: end; margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem); }
+  .head .section-head { margin-bottom: 1rem; }
+
+  .systems { display: grid; gap: 1.25rem; }
+  .system {
+    display: grid;
+    gap: 1.25rem;
+    align-items: start;
+    padding: 1.6rem;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .system:hover { border-color: rgb(34 83 171 / 0.35); box-shadow: var(--shadow); }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 1.1rem;
+    background: linear-gradient(145deg, var(--blue-soft), var(--pink-soft));
+  }
+  .icon img { width: 3.25rem; height: 3.25rem; }
+  .index { color: var(--pink-ink); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; }
+  h3 {
+    margin-top: 0.2rem;
+    font: 600 var(--fs-h3)/1.3 var(--font-display);
+    color: var(--navy);
+    text-wrap: balance;
+  }
+  .body { margin-top: 0.5rem; color: var(--muted); font-size: 0.97rem; }
+
+  @media (min-width: 520px) {
+    .system { grid-template-columns: auto 1fr; }
+  }
+  @media (min-width: 800px) {
+    .systems { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1000px) {
+    .head { grid-template-columns: 1fr 1fr; }
+    .head .section-head { margin-bottom: 0; }
+  }
+</style>

@@ -1,0 +1,133 @@
+---
+import { NAV, SITE } from '../content'
+import Icon from './Icon.astro'
+---
+
+<header class="header">
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label={`${SITE.name}, back to top`}>
+      <img src="/brand/logo-mark.svg" alt="" width="424" height="152" fetchpriority="high" />
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul role="list">
+        {NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+      <a class="btn btn--primary contact" href="#contact">Contact</a>
+    </nav>
+
+    <button class="menu-button" type="button" popovertarget="mobile-menu" aria-label="Open menu">
+      <Icon name="menu" />
+    </button>
+  </div>
+
+  <!-- Native popover: opens, closes and light-dismisses without JavaScript. -->
+  <div id="mobile-menu" class="sheet" popover>
+    <div class="sheet-top">
+      <img src="/brand/logo-mark.svg" alt="" width="424" height="152" />
+      <button class="menu-button" type="button" popovertarget="mobile-menu" popovertargetaction="hide" aria-label="Close menu">
+        <Icon name="close" />
+      </button>
+    </div>
+    <nav aria-label="Mobile">
+      <ul role="list">
+        {NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // The one script on the page: close the menu after an in-page link is chosen,
+  // which the popover API does not do on its own.
+  const menu = document.getElementById('mobile-menu')
+  menu?.addEventListener('click', (event) => {
+    if ((event.target as Element).closest('a')) menu.hidePopover()
+  })
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(255 255 255 / 0.86);
+    backdrop-filter: saturate(1.6) blur(14px);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    border-bottom: 1px solid rgb(226 231 240 / 0.8);
+  }
+  .bar {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .brand img { height: 52px; width: auto; }
+
+  .nav { display: none; align-items: center; gap: 1.75rem; }
+  .nav ul { display: flex; gap: 1.6rem; margin: 0; }
+  .nav ul a {
+    position: relative;
+    color: var(--navy);
+    font-size: 0.93rem;
+    font-weight: 550;
+    text-decoration: none;
+    padding-block: 0.4rem;
+  }
+  .nav ul a::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--pink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms ease;
+  }
+  .nav ul a:hover::after { transform: scaleX(1); }
+  .contact { min-height: 2.5rem; padding: 0.5rem 1.2rem; font-size: 0.9rem; }
+
+  .menu-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--navy);
+    cursor: pointer;
+  }
+
+  .sheet {
+    inset: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 var(--gutter) 2rem;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .sheet::backdrop { background: rgb(17 29 69 / 0.35); }
+  .sheet-top { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; }
+  .sheet-top img { height: 52px; width: auto; }
+  .sheet ul { display: grid; margin: 0.5rem 0 0; }
+  .sheet a {
+    display: block;
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--navy);
+    font: 600 1.3rem/1.2 var(--font-display);
+    text-decoration: none;
+  }
+
+  @media (min-width: 1040px) {
+    .nav { display: flex; }
+    .menu-button { display: none; }
+  }
+</style>

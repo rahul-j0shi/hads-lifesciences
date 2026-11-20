@@ -1,34 +1,54 @@
 # HADS Lifesciences
 
-Architecture foundation for a zero-budget prototype. **Planning only: no application, test runner, CI workflow, or deployable build exists yet.** Start implementation with [HADS-2](tracker/HADS-2.md) for the foundation slice, then [HADS-7](tracker/HADS-7.md) for the public website.
+Marketing website for HADS Lifesciences, live at **https://hads.life**.
 
-## Start here
+A single static page built with [Astro](https://astro.build) and served from Cloudflare's edge. It ships no JavaScript framework: one HTML file with inlined CSS, one web font, and a few SVG and WebP images, about 60 KB in total.
 
-1. Read [repository rules](rules/README.md).
-2. Use [learning guides](documentation/learnings/README.md) for concepts, then read [image analysis and scope](documentation/product-direction.md).
-3. For website work, read the [design concept](idea/design_concept.md). It owns the visual system, page copy, accessibility requirements and asset briefs.
-4. Follow [architecture](documentation/architecture.md) and the linked component contracts.
-5. Use the [hosting guide](documentation/setup-and-hosting.md) when the foundation slice is implemented.
-6. Track delivery in [tracker](tracker/README.md).
+## Run it
 
-## Ownership map
+Needs Node.js 22.23 or newer.
 
-| Folder | Owns |
-| --- | --- |
-| [idea](idea/README.md) | Original client image and brief, plus the [design concept](idea/design_concept.md) that interprets them |
-| [documentation](documentation/README.md) | Product interpretation, architecture decisions, operations |
-| [rules](rules/README.md) | All engineering rules, agent instructions, future skills and workflow conventions |
-| [frontend](frontend/README.md) | React implementation, UI tests, frontend configuration |
-| [backend](backend/README.md) | Python implementation, backend tests, reports and configuration |
-| [api-design](api-design/README.md) | HTTP contract, OpenAPI and request examples |
-| [database-design](database-design/README.md) | Collection metadata, validators, indexes and schema evolution |
-| [infrastructure](infrastructure/README.md) | Shared deployment wiring and optional local containers |
-| [tracker](tracker/README.md) | HADS-numbered tickets, dependencies and evidence |
+```bash
+./run.sh             # dev server with live reload: http://localhost:4321
+./run.sh --rebuild   # clean install + production build, served as Cloudflare will: http://localhost:8787
+./run.sh --deploy    # build and publish to Cloudflare (run `npx wrangler login` once first)
+```
 
-## Not in this repository
+Day to day you do not need `--deploy`: pushing to `main` on GitHub deploys automatically. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the one-time Cloudflare and GoDaddy setup.
 
-`idea/` is deliberately excluded from version control. It holds the client's unreleased logo artwork, their content brief, and `design_concept.md`, the authoritative design specification for the public website. Documents here link to it with ordinary relative paths, so those links resolve in a local working copy and return a 404 on the hosted repository. That is expected, not a broken link.
+## Layout
 
-Anyone implementing [HADS-7](tracker/HADS-7.md) needs that folder. Request it from the repository owner and place it at `idea/` in your working copy. Local credentials live in `backend/.env` and `frontend/.env`, also excluded; copy the committed `.env.example` files and fill them in.
+```
+apps/
+  web/                    the website
+    src/content.ts        every word on the page: edit copy here
+    src/components/       one file per page section
+    src/styles/global.css brand tokens (colors, type, spacing)
+    public/               served as-is: logo, images, icons, security headers
+    wrangler.jsonc        Cloudflare config
+docs/
+  deploy-cloudflare.md    step-by-step hosting guide
+  brand/                  master logo file from the client (CorelDRAW PDF)
+  principles/             engineering principles kept for a future backend
+idea/                     local only, not in git: client brief, design concept, reference artwork
+run.sh
+```
 
-Empty `api design`, `database design`, and `docker` directories were renamed to `api-design`, `database-design`, and `infrastructure`. `idea` stays unchanged for incoming write-ups. Application code stays in its respective frontend/backend folder. Root contains navigation and repository tooling only.
+New apps (for example a future API) go in `apps/<name>` with their own `package.json`.
+
+## Editing
+
+- **Copy:** change text in `apps/web/src/content.ts`. Keep health claims soft ("designed to", "supports"); never add certifications, statistics, testimonials or product names the client has not supplied.
+- **Contact details:** `CONTACT_DETAILS` in the same file. They feed the contact section, the footer and the search-engine data in one go.
+- **Colors:** taken from the logo. Use `--pink-ink`, not `--pink`, for normal-size pink text; it is the shade that passes contrast on white.
+
+## Brand assets
+
+Everything in `apps/web/public/brand/` is cut from the client's vector logo (`docs/brand/hads-logo-master.pdf`), not redrawn: the full lockup, the header lockup, and the four letters H, A, D, S, each with its emblem. The framework cards and the hero use those letters, so the site and the logo are the same drawing. The favicon is the D.
+
+| Token | Hex | Where it comes from |
+| --- | --- | --- |
+| Pink | `#E52189` | H and D |
+| Pink (text) | `#CF1A7A` | Darker step for readable text and buttons |
+| Blue | `#2253AB` | A and S |
+| Navy | `#192B62` | "LIFESCIENCES" |

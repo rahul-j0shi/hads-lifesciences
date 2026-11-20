@@ -1,0 +1,41 @@
+---
+import Contact from '../components/Contact.astro'
+import Delivery from '../components/Delivery.astro'
+import Footer from '../components/Footer.astro'
+import Framework from '../components/Framework.astro'
+import Header from '../components/Header.astro'
+import Hero from '../components/Hero.astro'
+import Portfolio from '../components/Portfolio.astro'
+import Sustainability from '../components/Sustainability.astro'
+import Vision from '../components/Vision.astro'
+import Page from '../layouts/Page.astro'
+---
+
+<Page>
+  <a class="skip" href="#main">Skip to content</a>
+  <Header />
+  <main id="main">
+    <Hero />
+    <Vision />
+    <Framework />
+    <Delivery />
+    <Portfolio />
+    <Sustainability />
+    <Contact />
+  </main>
+  <Footer />
+</Page>
+
+<style>
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--navy);
+    color: #fff;
+  }
+  .skip:focus { top: 1rem; }
+</style>

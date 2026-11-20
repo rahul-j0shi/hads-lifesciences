@@ -1,0 +1,156 @@
+/* Tokens come from the client logo (docs/brand). Contrast checked against
+   WCAG AA: --pink-ink is the darkest step of the logo pink that still reads as
+   the brand, and is the only pink allowed for normal-size text. */
+:root {
+  --pink: #e52189; /* logo, large or decorative use only (4.3:1 on white) */
+  --pink-ink: #cf1a7a; /* text and buttons, 5.1:1 on white */
+  --pink-deep: #b5146a;
+  --pink-soft: #fdeef6;
+  --blue: #2253ab; /* logo, 7.3:1 on white */
+  --blue-soft: #eaf0fa;
+  --navy: #192b62; /* logo wordmark */
+  --navy-deep: #111d45;
+
+  --ink: #2b3352;
+  --muted: #5a6178;
+  --line: #e2e7f0;
+  --surface: #ffffff;
+  --canvas: #f5f7fb;
+  --tint: #eef2f9;
+
+  --shadow-sm: 0 1px 2px rgb(25 43 98 / 0.06);
+  --shadow: 0 1px 2px rgb(25 43 98 / 0.05), 0 12px 32px -8px rgb(25 43 98 / 0.12);
+  --radius: 20px;
+  --radius-sm: 12px;
+
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fs-display: clamp(2.4rem, 1.5rem + 3.6vw, 4.1rem);
+  --fs-h2: clamp(1.9rem, 1.35rem + 2.2vw, 2.9rem);
+  --fs-h3: clamp(1.15rem, 1.08rem + 0.3vw, 1.3rem);
+  --fs-lead: clamp(1.08rem, 1rem + 0.35vw, 1.25rem);
+
+  --gutter: clamp(1.1rem, 0.6rem + 2.2vw, 2.5rem);
+  --section: clamp(4rem, 2.8rem + 5vw, 7.5rem);
+  --header-h: 76px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 12px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 1rem/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* Layout */
+.container {
+  width: min(100% - 2 * var(--gutter), 1200px);
+  margin-inline: auto;
+}
+.section { padding-block: var(--section); position: relative; }
+.section--canvas { background: var(--canvas); }
+
+/* Type */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--pink-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: '';
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+.h2 {
+  font: 600 var(--fs-h2)/1.12 var(--font-display);
+  color: var(--navy);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+.section-head { display: grid; gap: 1rem; margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem); max-width: 46rem; }
+.section-head--center { margin-inline: auto; text-align: center; justify-items: center; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-weight: 650;
+  font-size: 0.98rem;
+  text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn--primary {
+  background: var(--pink-ink);
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgb(207 26 122 / 0.55);
+}
+.btn--primary:hover { background: var(--pink-deep); }
+.btn--ghost {
+  border-color: var(--line);
+  background: rgb(255 255 255 / 0.7);
+  color: var(--navy);
+}
+.btn--ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}

@@ -1,0 +1,82 @@
+---
+import { CONTACT_DETAILS, NAV, SITE } from '../content'
+import Icon from './Icon.astro'
+
+const { email, phoneDisplay, phoneHref, address } = CONTACT_DETAILS
+const year = new Date().getFullYear()
+---
+
+<footer class="footer">
+  <div class="container top">
+    <img class="logo" src="/brand/logo.svg" alt={SITE.name} width="424" height="172" loading="lazy" />
+
+    <nav aria-label="Footer">
+      <p class="heading">Explore</p>
+      <ul role="list">
+        {NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <p class="heading">Reach us</p>
+      <ul role="list">
+        <li><a href={`mailto:${email}`}>{email}</a></li>
+        <li><a href={phoneHref}>{phoneDisplay}</a></li>
+        <li>{address.locality}, {address.city} {address.postalCode}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container bottom">
+    <p>&copy; {year} {SITE.name}. All rights reserved.</p>
+    <a class="to-top" href="#top" aria-label="Back to top" title="Back to top">
+      <Icon name="arrowUp" size={18} />
+    </a>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-top: clamp(3rem, 2.5rem + 2vw, 4.5rem); background: var(--surface); }
+  .top {
+    display: grid;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .logo { width: 15rem; }
+  .heading {
+    margin-bottom: 0.9rem;
+    color: var(--navy);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  ul { display: grid; gap: 0.55rem; color: var(--muted); font-size: 0.95rem; }
+  a { color: var(--muted); text-decoration: none; }
+  a:hover { color: var(--pink-ink); }
+
+  .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.4rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .to-top {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--navy);
+  }
+  .to-top:hover { border-color: var(--pink); color: var(--pink-ink); }
+
+  @media (min-width: 800px) {
+    .top { grid-template-columns: 1.4fr 1fr 1.2fr; }
+  }
+</style>
