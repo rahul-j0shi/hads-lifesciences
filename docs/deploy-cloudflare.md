@@ -27,7 +27,7 @@ The workflow needs one secret: a Cloudflare API token that may only deploy Worke
 3. **Account Resources:** Include, your account. **Zone Resources:** Include, All zones (or just `hads.life`).
 4. **Continue to summary → Create Token**, and copy the token. It is shown only once.
 5. On GitHub open **github.com/rahul-j0shi/hads-lifesciences → Settings → Secrets and variables → Actions → New repository secret**.
-6. **Name:** `CLOUDFLARE_API_TOKEN`. **Secret:** paste the token. Click **Add secret**.
+6. **Name:** `CLOUDFLARE_API_TOKEN_HADS`. **Secret:** paste the token. Click **Add secret**.
 7. Open the **Actions** tab, choose **Deploy**, and click **Run workflow** (branch `main`). It should finish green in about a minute.
 
 The account ID is in `wrangler.jsonc`. It identifies the account but grants no access, so it is not a secret.
@@ -78,7 +78,7 @@ Wait a few minutes for the certificate, then open **https://hads.life** and **ht
 
 | Symptom | Fix |
 | --- | --- |
-| Deploy run fails with "Authentication error" or code 10000 | The `CLOUDFLARE_API_TOKEN` secret is missing, expired or lacks Workers permissions. Create a new token (Part 2) and replace the secret. |
+| Deploy run fails with "Authentication error" or code 10000 | The `CLOUDFLARE_API_TOKEN_HADS` secret is missing, expired or lacks Workers permissions. Create a new token (Part 2) and replace the secret. |
 | Deploy run fails at "Install" or "Build and deploy" | Run `./run.sh --rebuild` locally: whatever fails there fails on GitHub too. |
 | "Hostname already has externally managed DNS records" when adding the custom domain | In **DNS → Records**, delete the old A/AAAA/CNAME record for that name, then add the custom domain again. |
 | Domain stuck on "Pending" for more than a day | In GoDaddy, confirm the nameservers are exactly the two Cloudflare ones and that DNSSEC is off. |
